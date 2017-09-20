@@ -1,0 +1,22 @@
+# This is your sidebar TOC. The sidebar code loops through sections here and provides the appropriate formatting.
+
+entries:
+- title: Sidebar
+  levels: one
+  folders:
+  - title: Overview
+    output: web
+    folderitems:
+    - title: The ciao project
+      url: /index.html
+      output: web
+  - title: Setup
+    output: web
+    folderitems:
+    - title: The ciao development environment
+      url: /developer.html
+      output: web
+    - title: Deploying ciao on a real cluster
+      url: /ciao-deploy.html
+      output: web
+
