@@ -19,4 +19,14 @@ entries:
     - title: Deploying ciao on a real cluster
       url: /ciao-deploy.html
       output: web
+  - title: Usage
+    output: web
+    folderitems:
+    - title: The ciao command line
+      url: /ciao.html
+      output: web
+    - title: Installing Kubernetes on ciao
+      url: /kubicle.html
+      output: web
+
 
