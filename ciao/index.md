@@ -25,3 +25,12 @@ unlock the true potential of ciao you'll need to install it on a real cluster of
 machines.  Installing ciao on a real cluster is relatively painless and is
 performed using a custom tool called ciao-deploy.  For more information see
 [Deploying ciao on a real cluster](ciao-deploy.html).
+
+## Using ciao
+
+Ciao clusters can be manipulated and inspected using the
+[ciao command line tool](ciao.html).  This tool can be used to build, deploy
+and manage cloud applications on a ciao cluster.
+
+Ciao also includes a tool called [kubicle](kubicle.html) that can be used to
+deploy a Kubernetes cluster on top of an existing ciao cluster.
