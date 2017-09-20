@@ -33,4 +33,8 @@ Ciao clusters can be manipulated and inspected using the
 and manage cloud applications on a ciao cluster.
 
 Ciao also includes a tool called [kubicle](kubicle.html) that can be used to
-deploy a Kubernetes cluster on top of an existing ciao cluster.
+deploy a Kubernetes cluster on top of an existing ciao cluster.  It
+automatically creates ciao workloads for the various k8s roles (master and
+worker), creates instances from these workloads which self-form into a k8s
+cluster, and extracts the configuration information needed to control the new
+cluster from the host machine.
