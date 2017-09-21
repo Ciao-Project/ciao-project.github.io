@@ -1,6 +1,7 @@
 ---
 title: Deploying ciao on a real cluster
 permalink: ciao-deploy.html
+keywords: ciao-deploy, installation, cluster, setup
 ---
 ## Prerequisites
 

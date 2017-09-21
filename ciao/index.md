@@ -1,6 +1,7 @@
 ---
 title: The ciao project
 permalink: index.html
+keywords: ciao, overview
 toc: false
 ---
 ## Ciao

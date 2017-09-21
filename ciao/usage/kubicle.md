@@ -1,6 +1,7 @@
 ---
 title: Installing Kubernetes on ciao
 permalink: kubicle.html
+keywords: kubicle, kubernetes
 ---
 
 ## Introduction

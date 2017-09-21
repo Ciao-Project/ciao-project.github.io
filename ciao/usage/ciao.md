@@ -1,6 +1,7 @@
 ---
 title: The ciao command line
 permalink: ciao.html
+keywords: ciao, command line, tool
 ---
 
 ## Introduction

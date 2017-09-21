@@ -1,6 +1,7 @@
 ---
 title: The ciao development environment
 permalink: developer.html
+keywords: singlevm, development, ciao-down
 ---
 ## Introduction
 
