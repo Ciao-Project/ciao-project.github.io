@@ -25,6 +25,9 @@ entries:
     - title: The ciao command line
       url: /ciao.html
       output: web
+    - title: Basic Acceptance Tests
+      url: /bat.html
+      output: web
     - title: Installing Kubernetes on ciao
       url: /kubicle.html
       output: web
