@@ -25,6 +25,12 @@ entries:
     - title: The ciao command line
       url: /ciao.html
       output: web
+    - title: Working with workloads
+      url: /workloads.html
+      output: web      
+    - title: Command line scripting
+      url: /scripting.html
+      output: web
     - title: Basic Acceptance Tests
       url: /bat.html
       output: web
