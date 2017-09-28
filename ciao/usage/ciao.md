@@ -7,8 +7,8 @@ keywords: ciao, command line, tool
 ## Introduction
 
 ciao-cli is the command-line interface for the Cloud Integrated Advanced Orchestrator
-(CIAO).  It sends HTTPS requests to the [Ciao controller](https://github.com/01org/ciao/tree/master/ciao-controller)
-compute API [endpoints](https://github.com/01org/ciao/blob/master/ciao-controller/compute.go).
+(CIAO).  It sends HTTPS requests to the [Ciao controller](https://github.com/ciao-project/ciao/tree/master/ciao-controller)
+compute API [endpoints](https://github.com/ciao-project/ciao/blob/master/ciao-controller/compute.go).
 
 ## Usage
 
