@@ -22,6 +22,9 @@ entries:
   - title: Usage
     output: web
     folderitems:
+    - title: Creating your first cloud app with ciao
+      url: /tutorial.html
+      output: web
     - title: The ciao command line
       url: /ciao.html
       output: web
