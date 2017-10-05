@@ -5,9 +5,11 @@ keywords: bat, system tests, BAT
 ---
 ## BAT tests
 
-The [_release/bat](https://github.com/ciao-project/ciao/tree/master/_release/bat) folder contains
-a set of BAT tests.  Each set of tests validates a specific part of ciao, such as storage, and
-is implemented by a separate go package in one of the following sub folders.  
+The
+[_release/bat](https://github.com/ciao-project/ciao/tree/master/_release/bat)
+folder contains a set of BAT tests.  Each set of tests validates a specific part
+of the Cloud Integrated Advanced Orchestrator, such as storage, and is
+implemented by a separate go package in one of the following sub folders.
 
 ```
 .
@@ -18,29 +20,29 @@ is implemented by a separate go package in one of the following sub folders.
 ├── workload_bat - Workload related BAT tests
 ```
 
-The tests are implemented using the go testing framework.  This is convenient
-as this framework is used for ciao's unit tests and so is already familiar
-to ciao developers, it requires no additional dependencies and it works with ciao's
-existing test case runner, test-cases.
+The tests are implemented using the go testing framework.  This is convenient as
+this framework is used for Cloud Integrated Advanced Orchestrator's unit tests
+and so is already familiar to its developers, it requires no additional
+dependencies and it works with the project's existing test case runner, test-cases.
 
 ## Set up
 
-The BAT tests require a running ciao cluster to execute.  This can be a
-full ciao cluster running on hundreds of nodes or a Single VM ciao cluster
-running on a single machine.  For more information about Single VM see
-[here](developer.html).
+The BAT tests require a running Cloud Integrated Advanced Orchestrator cluster
+to execute.  This can be a full cluster running on hundreds of nodes or a
+Single VM cluster running on a single machine.  For more information about
+Single VM see [here](developer.html).
 
 The BAT tests have some dependencies. The device on which they are run must have
 qemu-img installed and must also have access to the ceph cluster. The controller
-node in a ciao cluster fulfills both of these requirements so it is often easiest
-to run the BAT tests from this node. There is only one node in Single VM clusters,
-so when using Single VM, simply run the BAT tests from the device on which you ran
-setup.sh.
+node in a Cloud Integrated Advanced Orchestrator cluster fulfills both of these
+requirements so it is often easiest to run the BAT tests from this node. There
+is only one node in Single VM clusters, so when using Single VM, simply run the
+BAT tests from the device on which you ran setup.sh.
 
 The BAT tests require that certain environment variables have been set before they
 can be run:
 
-* `CIAO_CONTROLLER` exports the Ciao controller URL
+* `CIAO_CONTROLLER` exports the controller URL
 * `CIAO_CLIENT_CERT_FILE` provides the certificate to authenticate against the controller
 * `CIAO_ADMIN_CLIENT_CERT_FILE` provides the admin certificate to authenticate against the controller
 * `CIAO_CA_CERT_FILE` (optional) use the supplied certificate as the CA

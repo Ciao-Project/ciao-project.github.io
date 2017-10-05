@@ -1,11 +1,12 @@
 ---
-title: Deploying ciao on a real cluster
+title: Deploying on a real cluster
 permalink: ciao-deploy.html
 keywords: ciao-deploy, installation, cluster, setup
 ---
 ## Prerequisites
 
-Prior to deploying ciao the following prerequisites must be met:
+Prior to deploying the Cloud Integrated Advanced Orchestrator the following
+prerequisites must be met:
 
 1. Ensure that there is a user account on the system accessed by key
 authentication with **passwordless** sudo access.
@@ -25,7 +26,7 @@ All deployment is driven from the master node of the cluster. On this machine
 you will need to install Go 1.8. Instructions for doing this can be found [on
 the Go website](https://www.golang.org)
 
-Next download, install and build ciao:
+Next download, install and build the Cloud Integrated Advanced Orchestrator:
 
 ```
 go get -u github.com/ciao-project/ciao/...
@@ -38,7 +39,7 @@ Now setup the master node using `ciao-deploy`. The parameters below are the
 minimum that you will need to specify to have a working setup.
 
 `--https-cert and --https-ca-cert` are the private and public keychains needed
-to operate the HTTPS server in Ciao.
+to operate the HTTPS server in the Cloud Integrated Advanced Orchestrator.
 .
 
 ```
@@ -103,7 +104,7 @@ will need both `CIAO_ADMIN_CLIENT_CERT_FILE` and `CIAO_CLIENT_CERT_FILE` set.
 The latter with a non-admin user that you've added with `ciao-deploy auth create`
 
 Once workloads are created you can create a new instance and experiment with
-the ciao cluster.
+the Cloud Integrated Advanced Orchestrator cluster.
 
 ```
 ciao-cli instance add -workload <workload id>
@@ -111,8 +112,9 @@ ciao-cli instance add -workload <workload id>
 
 ## Updating the cluster
 
-To update to a newer version ciao. Download and compile it as above and then
-run the following commands.
+To update to a newer version of the Cloud Integrated Advanced
+Orchestrator. Download and compile it as above and then run the following
+commands.
 
 To update the master use:
 
@@ -128,8 +130,8 @@ ciao-deploy join ciao-cn01 ciao-cn02 ciao-cn03
 
 ## Teardown
 
-To remove ciao from the worker nodes in the cluster `ciao-deploy unjoin` can be
-used.
+To remove the Cloud Integrated Advanced Orchestrator from the worker nodes in
+the cluster `ciao-deploy unjoin` can be used.
 
 ```
 ciao-deploy unjoin ciao-nn ciao-cn01 ciao-cn02 ciao-cn03

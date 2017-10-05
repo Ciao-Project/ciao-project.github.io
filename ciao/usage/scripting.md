@@ -1,7 +1,7 @@
 ---
 title: Command line scripting
 permalink: scripting.html
-keywords: ciao, command line, tool, scripting, templates
+keywords: CIAO, command line, tool, scripting, templates
 ---
 
 ## Scripting with ciao-cli
