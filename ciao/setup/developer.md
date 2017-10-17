@@ -1,7 +1,7 @@
 ---
 title: The ciao development environment
 permalink: developer.html
-keywords: singlevm, development, ciao-down
+keywords: singlevm, development, ccloudvm
 ---
 ## Introduction
 
@@ -28,17 +28,17 @@ machines and a physical network.
 
 We support two modes of operation:
 
-- ciao-down mode: Where a virtual machine is automatically created and 
-  launched, and the virtual cluster is setup and tested within the virtual 
-  machine
+- Configurable Cloud VM (ccloudvm) mode: Where a virtual machine is
+  automatically created and launched, and the virtual cluster is setup and
+  tested within the virtual machine
 - bare metal mode: Where the virtual cluster is setup on the host machine 
   itself
 
-The ciao-down mode is the preferred mode of development on systems that have 
+The ccloudvm mode is the preferred mode of development on systems that have 
 the resources and CPU capabilities needed, as it fully isolates the Ciao 
 virtual cluster and sets up an environment in which Ciao is known to work 
-seamlessly. In addition, the ciao-down mode does not require any changes to 
-the user's network firewall setup. However, ciao-down mode does require 
+seamlessly. In addition, the ccloudvm mode does not require any changes to 
+the user's network firewall setup. However, ccloudvm mode does require 
 VT-x nesting to be supported by the host.
 
 The bare metal mode is the highest performance mode, but may require some 
@@ -49,8 +49,8 @@ In both modes Ciao is configured in a special all in one development mode
 where cluster nodes have dual roles (i.e launcher can be a Network Node and 
 a Compute Node at the same time)
 
-In the text below **machine** refers to the ciao-down VM in the case of the 
-ciao-down mode, it refers to the host system in the case of the bare metal mode.
+In the text below **machine** refers to the ccloudvm VM in the case of the 
+ccloudvm mode, it refers to the host system in the case of the bare metal mode.
 
 ## Components running on the Machine
       1. Controller 	
@@ -112,8 +112,8 @@ On the host install the latest release of go for your distribution
 Ciao. Ciao will not work with older version of Go. Hence it is best you download
 and install the latest version of Go if you distro is not on Go 1.8." %}
 
-# Getting Started with ciao-down
-ciao-down is a small utility for setting up a VM that contains
+# Getting Started with Configurable Cloud VM (ccloudvm)
+Ccloudvm is a small utility for setting up a VM that contains
 everything you need to run ciao's Single VM. All you need to have
 installed on your machine is:
 
@@ -122,19 +122,19 @@ installed on your machine is:
 Once Go is installed you simply need to type
 
 ```
-go get github.com/ciao-project/ciao/testutil/ciao-down
-$GOPATH/bin/ciao-down create ciao
+go get github.com/intel/ccloudvm
+$GOPATH/bin/ccloudvm create ciao
 ```
 
-ciao-down will install some needed dependencies on your local PC such
+ccloudvm will install some needed dependencies on your local PC such
 as qemu and xorriso. It will then download an Ubuntu Cloud Image and
 create a VM based on this image. It will boot the VM and install in that
 VM everything you need to run ciao Single VM, including docker, ceph,
-go, gcc, etc. When ciao-down create has finished you can connect to the
+go, gcc, etc. When ccloudvm create has finished you can connect to the
 newly created VM with
 
 ```
-$GOPATH/bin/ciao-down connect
+$GOPATH/bin/ccloudvm connect
 ```
 
 Your host's GOPATH is mounted inside the VM. Thus you can edit your
@@ -143,14 +143,14 @@ the ciao code on your host machine and test in Single VM.
 
 ## Proxies
 
-One of the nice things about using ciao-down is that it is proxy aware.
-When you run ciao-down create, ciao-down looks in its environment for
+One of the nice things about using ccloudvm is that it is proxy aware.
+When you run ccloudvm create, ccloudvm looks in its environment for
 proxy variables such as http_proxy, https_proxy and no_proxy.  If it
 finds them it ensures that these proxies are correctly configured for
 all the software that it installs and uses inside the VM, e.g., apt, docker,
 wget, ciao-cli.  So if your development machine is sitting
 behind a proxy, ensure you have your proxy environment variables set
-before running ciao-down.
+before running ccloudvm.
 
 # Getting Started with Bare Metal
 
@@ -212,7 +212,7 @@ You should see no errors.
 # Verify that Ciao is fully functional  using the **machine**
 
 Now that you have the machine setup (either a bare metal setup or a 
-ciao-down VM setup).
+ccloudvm VM setup).
 
 You can now quickly verify that all aspects of Ciao including VM launch, 
 container launch, and networking.  
