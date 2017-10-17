@@ -31,25 +31,25 @@ Please familiarize yourself with this environment before reading any further.
 ## Setup
 
 In order to view the Guestbook web application from our PC we will need to set up
-a port mapping when we launch ciao-down.  This can be done using the -port parameter.
-If you already have a ciao-down instance running, you need to stop it and restart it
-specifying the port mapping, e.g.,
+a port mapping when we launch Configurable Cloud VM (ccloudvm).  This can be done
+using the -port parameter.  If you already have a ccloudvm instance running, you
+need to stop it and restart it specifying the port mapping, e.g.,
 
 ```
-$ ciao-down stop
-$ ciao-down restart -port 8080-80
+$ ccloudvm stop
+$ ccloudvm restart -port 8080-80
 ```
 
-if you have not yet created a ciao-down instance in which to run ciao, type
+if you have not yet created a ccloudvm instance in which to run ciao, type
 
 ```
-$ ciao-down create ciao -port 8080-80
+$ ccloudvm create ciao -port 8080-80
 ```
 
-Once your ciao-down VM has been restarted or created, connect to it using the
+Once your ccloudvm VM has been restarted or created, connect to it using the
 
 ```
-$ ciao-down connect
+$ ccloudvm connect
 ```
 
 ## Creating the workloads
@@ -87,7 +87,7 @@ The reported UUID of the Ubuntu Server backing image is 046aa079-7614-494b-9044-
 A different UUID will be reported on your own cluster.  You will need to note it down
 for future use.
 
-Now we're ready to create our workload definition files.  Create a new directory somewhere inside your ciao-down VM, e.g., ~/examples.  Enter this directory and create the following files,
+Now we're ready to create our workload definition files.  Create a new directory somewhere inside your ccloudvm VM, e.g., ~/examples.  Enter this directory and create the following files,
 being careful to specify the correct UUID for disks->source->id in the redis-master.yaml
 and redis-slave.yaml files.
 
@@ -360,7 +360,7 @@ to your no_proxy environment variable for this to work.
 Guestbook is now up and running but to really test it we need to view the
 application in a browser.  The easiest way to do this is to use the browser
 running on your host computer.  At the start of the tutorial we set up a port
-mapping for our ciao-down VM.  We will access the Guestbook application via this
+mapping for our ccloudvm VM.  We will access the Guestbook application via this
 port using the localhost interface on your host computer.  However, before we do
 this we need to first set up some IP table rules in the SingleVM to redirect
 traffic on port 80 to our container.  This can be done as follows.

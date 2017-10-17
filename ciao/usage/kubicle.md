@@ -12,7 +12,7 @@ In this article we will take a look at the simplest way of installing k8s on top
 
 - Installing Go
 - Configuring proxies [OPTIONAL] 
-- Downloading and building ciao-down
+- Downloading and building Configurable Cloud VM (ccloudvm)
 - Creating a VM in which to run ciao
 - Logging into the VM and starting the ciao cluster
 - Creating our k8s cluster
@@ -22,7 +22,7 @@ In this article we will take a look at the simplest way of installing k8s on top
 
 To follow the instructions below you will need a Linux system with at least 8GB of RAM.  Ideally, running Ubuntu 16.04 as that is what we use to develop ciao and is the environment in which ciao is most heavily tested.
 
-The ciao development environment runs inside a VM managed by a tool called ciao-down which we will introduce shortly.  ciao itself will launch some VMs inside the ciao-down created VM for its own internal use and to host our k8s cluster.  To launch VMs ciao requires KVM to be enabled, hence KVM must be available inside the ciao-down VM.  In order for this to work our host machine needs to have nested KVM enabled.  This is enabled by default in Ubuntu 16.04 but may not be enabled on other distributions.  If nested KVM is not enabled you will get an error when running ciao-down in step 4.
+The ciao development environment runs inside a VM managed by a tool called ccloudvm which we will introduce shortly.  ciao itself will launch some VMs inside the ccloudvm created VM for its own internal use and to host our k8s cluster.  To launch VMs ciao requires KVM to be enabled, hence KVM must be available inside the ccloudvm VM.  In order for this to work our host machine needs to have nested KVM enabled.  This is enabled by default in Ubuntu 16.04 but may not be enabled on other distributions.  If nested KVM is not enabled you will get an error when running ccloudvm in step 4.
 
 On systems with Intel based CPUs you can verify that nested KVM is enabled by typing
 
@@ -60,7 +60,7 @@ $ export PATH=$PATH:$(go env GOPATH)/bin
 If your computer accesses the Internet through a proxy, you should make sure that the proxy environment variables are correctly configured in your shell.  This is important for two reasons:
 
 The Go command used to download ciao will fail if it cannot find the proxy.
-ciao-down will replicate your local proxy settings in all the VMs it creates.  It will ensure that proxy environment variables are correctly initialised for all users, and that both docker and the package managers, such as APT, are made aware of the appropriate proxy settings.  If the proxy environment variables are not correctly configured, ciao-down cannot do this.
+ccloudvm will replicate your local proxy settings in all the VMs it creates.  It will ensure that proxy environment variables are correctly initialised for all users, and that both docker and the package managers, such as APT, are made aware of the appropriate proxy settings.  If the proxy environment variables are not correctly configured, ccloudvm cannot do this.
 
 So, assuming that you are using a corporate proxy you should enter the following commands, replacing the URLs and the domain names with values that are appropriate to your environment.
 
@@ -70,39 +70,39 @@ $ export https_proxy=http://my-proxy.my-company.com:port
 $ export no_proxy=.my-company.com
 ```
 
-## Downloading and Building ciao-down
+## Downloading and Building ccloudvm
 
-Once Go is installed downloading and installing ciao-down is easy.  Simply type
+Once Go is installed downloading and installing ccloudvm is easy.  Simply type
 
 ```shell
-$ go get github.com/ciao-project/ciao/testutil/ciao-down
+$ go get github.com/intel/ccloudvm
 ```
 
 ## Creating a VM in which to run ciao
 
-The next step is to create a custom VM for running ciao.  This might sound complicated, and it is, but luckily the entire process is automated for us by a tool called ciao-down.  ciao-down is a small utility designed to create and manage custom VMs built from cloud images.  To create a VM we need to provide ciao-down with a set of instructions called a workload.  A workload for ciao has already been created, so to make a new VM designed to run ciao you simply need to type.
+The next step is to create a custom VM for running ciao.  This might sound complicated, and it is, but luckily the entire process is automated for us by ccloudvm.  Ccloudvm is a small utility designed to create and manage custom VMs built from cloud images.  To create a VM we need to provide ccloudvm with a set of instructions called a workload.  A workload for ciao has already been created, so to make a new VM designed to run ciao you simply need to type.
 
 ```shell
-$ ciao-down create -mem=6 -cpus=2 ciao
+$ ccloudvm create -mem=6 -cpus=2 ciao
 ```
 
-This will create a new VM with 6GBs of memory and 2 VCPUs, which is the minimum needed for hosting a k8s cluster inside ciao-down.
+This will create a new VM with 6GBs of memory and 2 VCPUs, which is the minimum needed for hosting a k8s cluster inside ccloudvm.
 
-ciao-down has dependencies on a number of other components, such as qemu.  The first thing it will do when executed is to check to see whether these packages are present on your host computer.  If they are not, it will install them, asking you for your password if necessary. 
+ccloudvm has dependencies on a number of other components, such as qemu.  The first thing it will do when executed is to check to see whether these packages are present on your host computer.  If they are not, it will install them, asking you for your password if necessary. 
 
-The ciao-down create command has a lot of work to do so it can take some time to run.  In short, it performs the following tasks.
+The ccloudvm create command has a lot of work to do so it can take some time to run.  In short, it performs the following tasks.
 
-- Installs the dependencies ciao-down needs on the host machine
+- Installs the dependencies ccloudvm needs on the host machine
 - Downloads an Ubuntu 16.04 cloud image
 - Creates and boots a new VM based on this image
 - Installs all of the dependencies needed by ciao inside this VM
 - Updates the guest OS
 - Creates a user account inside the VM with SSH enabled
 
-An edited example ciao-down output is shown below
+An edited example ccloudvm output is shown below
 
 ```shell
-$ ciao-down create -mem=6 -cpus=2 ciao
+$ ccloudvm create -mem=6 -cpus=2 ciao
 Installing host dependencies
 OS Detected: ubuntu
 Missing packages detected: [xorriso]
@@ -152,7 +152,7 @@ Downloading latest clear cloud image : [OK]
 Setting git user.name : [OK]
 Setting git user.email : [OK]
 VM successfully created!
-Type ciao-down connect to start using it.
+Type ccloudvm connect to start using it.
 ```
 
 Please see the [Troubleshooting](kubicle.html#trouble) section near the bottom of this document if this command fails.
@@ -162,10 +162,10 @@ Please see the [Troubleshooting](kubicle.html#trouble) section near the bottom o
 Now our VM has been created we need to log into it and start our ciao cluster.  This is easily done.  To log into the VM simply type
 
 ```shell
-$ ciao-down connect
+$ ccloudvm connect
 ```
 
-This will connect to the VM via SSH using a private key created specifically for this VM when we ran ciao-down create.  You will be presented with a set of instructions explaining how to start the ciao cluster.
+This will connect to the VM via SSH using a private key created specifically for this VM when we ran ccloudvm create.  You will be presented with a set of instructions explaining how to start the ciao cluster.
 
 ```
 Welcome to Ubuntu 16.04.2 LTS (GNU/Linux 4.4.0-83-generic x86_64)
@@ -287,7 +287,7 @@ To access k8s cluster:
   - export NO_PROXY=$NO_PROXY,198.51.100.2
 ```
 
-When executing this command, make sure to replace the image UUID with the UUID of the Ubuntu Server 16.04 image reported by running ciao-list on your cluster.  You shouldn’t change anything else, i.e., include the --external-ip=198.51.100.2 option verbatim.  The --external-ip option provides an IP address that can be used to administer the k8s cluster and to access services running within it.  The address 198.51.100.2 is safe to use inside a ciao-down VM created to run ciao.
+When executing this command, make sure to replace the image UUID with the UUID of the Ubuntu Server 16.04 image reported by running ciao-list on your cluster.  You shouldn’t change anything else, i.e., include the --external-ip=198.51.100.2 option verbatim.  The --external-ip option provides an IP address that can be used to administer the k8s cluster and to access services running within it.  The address 198.51.100.2 is safe to use inside a ccloudvm VM created to run ciao.
 
 Looking at the output of the kubicle command we can see that it has created a number of ciao objects for us.  It has created two new ciao workloads, one for the master and one for the workers.  From these workloads it has created two VM instances, one master node and one worker node.  Finally, it has created an external ip address for us which it has associated with the master node.  We’ll use this address to access the k8s cluster a little later.  Let’s inspect these new objects using the ciao-cli tool.  If you execute ciao-cli workload list, you should now see five workloads, the final two of which have just been created by kubicle.
 
@@ -324,7 +324,7 @@ To access k8s cluster:
 - export KUBECONFIG=$GOPATH/src/github.com/ciao-project/ciao/testutil/singlevm/admin.conf
 ```
 
-Execute this command.  If your ciao-down instance is running behind a proxy, you will also need to add the external-ip address we specified earlier to your no_proxy settings.  The reason for this is that kubectl will access the k8s cluster via this external ip address and we don’t want this access to go through a proxy.  Again the status message printed by the kubicle create command provides us with the commands we need to execute.
+Execute this command.  If your ccloudvm instance is running behind a proxy, you will also need to add the external-ip address we specified earlier to your no_proxy settings.  The reason for this is that kubectl will access the k8s cluster via this external ip address and we don’t want this access to go through a proxy.  Again the status message printed by the kubicle create command provides us with the commands we need to execute.
 
 ```shell
 - If you use proxies, set
@@ -422,21 +422,21 @@ f6c494d1-e4b4-4c26-a663-0dab4dfb15db
 38ec8bd5-3c50-477f-9b59-b8b332609551
 ```
 
-To delete the entire ciao-down VM simply log out of the VM and type
+To delete the entire ccloudvm VM simply log out of the VM and type
 
 ```shell
-$ ciao-down delete
+$ ccloudvm delete
 ```
 
 on your host.
 
 ## Troubleshooting {#trouble}
 
-The ciao-down create command can sometimes fail.  The most common causes of this failure are discussed below.
+The ccloudvm create command can sometimes fail.  The most common causes of this failure are discussed below.
 
 ### Failure to Access /dev/kvm
 
-One cause of failure is that the user running ciao-down does not have the required permissions
+One cause of failure is that the user running ccloudvm does not have the required permissions
 to access /dev/kvm.  If this is the case you will see and error message similar to the one
 below.
 
@@ -455,17 +455,17 @@ $ sudo gpasswd -a $USER kvm
 
 ### Port Conflict
 
- By default, ciao-down map a port on your computer's network interface to a port
+ By default, ccloudvm maps a port on your computer's network interface to a port
  on the VM it creates. One of these ports, 10022, is used for SSH access. This
  port mapping is necessary to access these services in the VM from the host. For
- example, the ciao-down connect command is implementing by executing
+ example, the ccloudvm connect command is implementing by executing
 
 ```shell
-$ ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /home/$USER/.ciao-down/id_rsa 127.0.0.1 -p 10022
+$ ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /home/$USER/.ccloudvm/id_rsa 127.0.0.1 -p 10022
 ```
 
 on the host.  There's a potential problem here.  If either of these ports are already taken by some other service on
-your computer, ciao-down create will fail, e.g.,
+your computer, ccloudvm create will fail, e.g.,
 
 ```shell
 Installing host dependencies
@@ -477,9 +477,9 @@ qemu-system-x86_64: -net user,hostfwd=tcp::10022-:22: Device 'user' could not be
 
 ```
 
-Here we can see that port 10022 is already taken.  Going forward we will modify ciao-down to dynamically select available host ports.  In the meantime however, we can work around this problem by overriding the default ports on the command line, as follows:
+Here we can see that port 10022 is already taken.  Going forward we will modify ccloudvm to dynamically select available host ports.  In the meantime however, we can work around this problem by overriding the default ports on the command line, as follows:
 
 ```shell
-$ ciao-down create -mem=6 -cpus=2 -port "10023-22" ciao
+$ ccloudvm create -mem=6 -cpus=2 -port "10023-22" ciao
 ```
 
