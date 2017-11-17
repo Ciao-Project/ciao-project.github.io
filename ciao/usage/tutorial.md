@@ -97,7 +97,7 @@ and redis-slave.yaml files.
 description: "Redis Master"
 vm_type: qemu
 fw_type: legacy
-defaults:
+requirements:
     vcpus: 2
     mem_mb: 512
 cloud_init: redis-master-cloud.yaml
@@ -129,7 +129,7 @@ runcmd:
 description: "Redis Slave"
 vm_type: qemu
 fw_type: legacy
-defaults:
+requirements:
     vcpus: 2
     mem_mb: 512
 cloud_init: redis-slave-cloud.yaml
@@ -166,7 +166,7 @@ apt-get in the cloud.yaml files with `http_proxy=<MY-PROXY-URL>`, replacing
 description: "Guestbook container"
 vm_type: docker
 image_name: "gcr.io/google-samples/gb-frontend:v4"
-defaults:
+requirements:
   vcpus: 2
   mem_mb: 100
 cloud_init: "guestbook-cloud.yaml"

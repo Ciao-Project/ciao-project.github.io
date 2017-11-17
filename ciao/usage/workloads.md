@@ -118,7 +118,7 @@ that the workload will need to use when it runs. There are two resources
 which must be specified:
 
 ```yaml
-defaults:
+requirements:
     vcpus: 2
     mem_mb: 512
 ```
