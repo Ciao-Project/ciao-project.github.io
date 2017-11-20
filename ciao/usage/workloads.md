@@ -130,6 +130,29 @@ workload definition. This file must be readable by ciao-cli.
 cloud_init: "fedora_vm.yaml"
 ```
 
+## Specifying the requirements for a workload
+
+As well as being able to specify the amount of memory and number of virtual
+CPUs that should be allocated to a workload the requirements section can also
+be used to control how an instance of the workload is scheduled.
+
+```yaml
+requirements:
+    node_id: 1c555de5-fee2-42d8-925e-2fdc47839d24
+```
+
+Requires that an instance created from this workload must be scheduled on the
+node which has a matching ID.
+
+```yaml
+requirements:
+    hostname: my-special-node
+```
+
+Here rather than using the node ID for a specific node the node's hostname is
+used to require that the instance is only started on the node that matches that
+hostname.
+
 ## Cloud config yaml file
 
 Below is an example ciao cloud config file. ciao cloud config files have a
