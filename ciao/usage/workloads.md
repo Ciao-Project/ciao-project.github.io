@@ -61,8 +61,8 @@ vm_type: qemu
 fw_type: legacy
 disks:
   - source:
-       service: image
-       id: "73a86d7e-93c0-480e-9c41-ab42f69b7799"
+       type: image
+       source: "73a86d7e-93c0-480e-9c41-ab42f69b7799"
     ephemeral: true
     bootable: true
 ```
@@ -107,11 +107,12 @@ image by including a `source` definition.
 disks:
 - bootable: true
   source:
-     service: volume
-     id: "9c858de5-fdd3-42d8-925e-2fdc60768d24"
+     type: volume
+     source: "9c858de5-fdd3-42d8-925e-2fdc60768d24"
 ```
 
-Valid values for the source `service` field are `image` or `volume`
+Valid values for the source `type` field are `image` or `volume`. The `source`
+field for images can refer to either the image ID or name.
 
 Workload definitions must also contain default values for resources
 that the workload will need to use when it runs. There are two resources
