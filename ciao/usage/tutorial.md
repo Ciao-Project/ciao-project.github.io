@@ -103,8 +103,8 @@ requirements:
 cloud_init: redis-master-cloud.yaml
 disks:
   - source:
-       service: image
-       id: "046aa079-7614-494b-9044-06587510213d"
+       type: image
+       source: "046aa079-7614-494b-9044-06587510213d"
     ephemeral: true
     bootable: true
 ```
@@ -135,8 +135,8 @@ requirements:
 cloud_init: redis-slave-cloud.yaml
 disks:
   - source:
-       service: image
-       id: "046aa079-7614-494b-9044-06587510213d"
+       type: image
+       source: "046aa079-7614-494b-9044-06587510213d"
     ephemeral: true
     bootable: true
 ```
