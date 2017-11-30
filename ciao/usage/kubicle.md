@@ -1,28 +1,28 @@
 ---
-title: Installing Kubernetes on ciao
+title: Installing Kubernetes
 permalink: kubicle.html
 keywords: kubicle, kubernetes
 ---
 
 ## Introduction
 
-ciao is a suite of Go programs designed to make it easy to set up and configure a private cloud.  It can orchestrate both containers and VMs in multiple tenants across multiple nodes.  It is designed to be fast and scalable and it enables security by default.  All control plane communication within the cluster is encrypted and each tenant gets its own private network.  All of these traits make ciao an ideal private undercloud for Kubernetes and the good news is, once you have a running ciao cluster, you can set up a complete k8s cluster with a single command.
+The Cloud Integrated Advanced Orchestrator is a suite of Go programs designed to make it easy to set up and configure a private cloud.  It can orchestrate both containers and VMs in multiple tenants across multiple nodes.  It is designed to be fast and scalable and it enables security by default.  All control plane communication within the cluster is encrypted and each tenant gets its own private network.  All of these traits make the Cloud Integrated Advanced Orchestrator an ideal private undercloud for Kubernetes and the good news is, once you have a running Cloud Integrated Advanced Orchestrator cluster, you can set up a complete k8s cluster with a single command.
 
-In this article we will take a look at the simplest way of installing k8s on top of a ciao cluster which requires only a single machine.  We will do this by
+In this article we will take a look at the simplest way of installing k8s on top of a Cloud Integrated Advanced Orchestrator cluster which requires only a single machine.  We will do this by
 
 - Installing Go
 - Configuring proxies [OPTIONAL] 
 - Downloading and building Configurable Cloud VM (ccloudvm)
-- Creating a VM in which to run ciao
-- Logging into the VM and starting the ciao cluster
+- Creating a VM in which to run Cloud Integrated Advanced Orchestrator
+- Logging into the VM and starting the cluster
 - Creating our k8s cluster
-- Shutting down our k8s and ciao clusters
+- Shutting down our k8s and Cloud Integrated Advanced Orchestrator clusters
 
 ## Prerequisites
 
-To follow the instructions below you will need a Linux system with at least 8GB of RAM.  Ideally, running Ubuntu 16.04 as that is what we use to develop ciao and is the environment in which ciao is most heavily tested.
+To follow the instructions below you will need a Linux system with at least 8GB of RAM.  Ideally, running Ubuntu 16.04 as that is what we use to develop the Cloud Integrated Advanced Orchestrator and is the environment in which it is most heavily tested.
 
-The ciao development environment runs inside a VM managed by a tool called ccloudvm which we will introduce shortly.  ciao itself will launch some VMs inside the ccloudvm created VM for its own internal use and to host our k8s cluster.  To launch VMs ciao requires KVM to be enabled, hence KVM must be available inside the ccloudvm VM.  In order for this to work our host machine needs to have nested KVM enabled.  This is enabled by default in Ubuntu 16.04 but may not be enabled on other distributions.  If nested KVM is not enabled you will get an error when running ccloudvm in step 4.
+The Cloud Integrated Advanced Orchestrator development environment runs inside a VM managed by a tool called ccloudvm which we will introduce shortly.  It will launch some VMs inside the ccloudvm created VM for its own internal use and to host our k8s cluster.  To launch VMs the Cloud Integrated Advanced Orchestrator requires KVM to be enabled, hence KVM must be available inside the ccloudvm VM.  In order for this to work our host machine needs to have nested KVM enabled.  This is enabled by default in Ubuntu 16.04 but may not be enabled on other distributions.  If nested KVM is not enabled you will get an error when running ccloudvm in step 4.
 
 On systems with Intel based CPUs you can verify that nested KVM is enabled by typing
 
@@ -45,7 +45,7 @@ $ sudo apt-get install git
 
 ## Installing Go
 
-Download the latest stable version of Go from [here]( https://golang.org/dl/  ) and follow the installation instructions.  ciao requires Go 1.8 or later.
+Download the latest stable version of Go from [here]( https://golang.org/dl/  ) and follow the installation instructions.  Go 1.8 or later is required.
 
 You should also ensure that the directory into which Go installs its binaries is present in your path.  You can do this by executing the following command:
 
@@ -59,7 +59,7 @@ $ export PATH=$PATH:$(go env GOPATH)/bin
 
 If your computer accesses the Internet through a proxy, you should make sure that the proxy environment variables are correctly configured in your shell.  This is important for two reasons:
 
-The Go command used to download ciao will fail if it cannot find the proxy.
+The Go command used to download the Cloud Integrated Advanced Orchestrator will fail if it cannot find the proxy.
 ccloudvm will replicate your local proxy settings in all the VMs it creates.  It will ensure that proxy environment variables are correctly initialised for all users, and that both docker and the package managers, such as APT, are made aware of the appropriate proxy settings.  If the proxy environment variables are not correctly configured, ccloudvm cannot do this.
 
 So, assuming that you are using a corporate proxy you should enter the following commands, replacing the URLs and the domain names with values that are appropriate to your environment.
@@ -78,9 +78,10 @@ Once Go is installed downloading and installing ccloudvm is easy.  Simply type
 $ go get github.com/intel/ccloudvm
 ```
 
-## Creating a VM in which to run ciao
+## Creating a VM in which to run the Cloud Integrated Advanced Orchestrator
 
-The next step is to create a custom VM for running ciao.  This might sound complicated, and it is, but luckily the entire process is automated for us by ccloudvm.  Ccloudvm is a small utility designed to create and manage custom VMs built from cloud images.  To create a VM we need to provide ccloudvm with a set of instructions called a workload.  A workload for ciao has already been created, so to make a new VM designed to run ciao you simply need to type.
+The next step is to create a custom VM for running the Cloud Integrated Advanced Orchestrator.  This might sound complicated, and it is, but luckily the entire process is automated for us by a tool called ccloudvm.  Ccloudvm is a small utility designed to create and manage custom VMs built from cloud images.  To create a VM we need to provide ccloudvm with a set of instructions called a workload.  A workload has already been created, so to make a new VM designed to run the Cloud Integrated Advanced Orchestrator you simply need to type.
+
 
 ```shell
 $ ccloudvm create -mem=6 -cpus=2 ciao
@@ -95,7 +96,7 @@ The ccloudvm create command has a lot of work to do so it can take some time to 
 - Installs the dependencies ccloudvm needs on the host machine
 - Downloads an Ubuntu 16.04 cloud image
 - Creates and boots a new VM based on this image
-- Installs all of the dependencies needed by ciao inside this VM
+- Installs all of the dependencies needed by the Cloud Integrated Advanced Orchestrator inside this VM
 - Updates the guest OS
 - Creates a user account inside the VM with SSH enabled
 
@@ -157,9 +158,9 @@ Type ccloudvm connect to start using it.
 
 Please see the [Troubleshooting](kubicle.html#trouble) section near the bottom of this document if this command fails.
 
-## Starting the ciao Cluster
+## Starting the Cloud Integrated Advanced Orchestrator Cluster
 
-Now our VM has been created we need to log into it and start our ciao cluster.  This is easily done.  To log into the VM simply type
+Now our VM has been created we need to log into it and start our cluster.  This is easily done.  To log into the VM simply type
 
 ```shell
 $ ccloudvm connect
@@ -204,13 +205,13 @@ When you're finished run the following command to cleanup
 ~/local/cleanup.sh
 ```
 
-To communicate with the newly created ciao cluster we need to initialise some environment variables.  This can be done by sourcing the file ~/local/demo.sh, e.g.,
+To communicate with the newly created Cloud Integrated Advanced Orchestrator cluster we need to initialise some environment variables.  This can be done by sourcing the file ~/local/demo.sh, e.g.,
 
 ```shell
 $ . ~/local/demo.sh
 ```
 
-We can then run a few simple ciao commands to check that everything is working correctly.  To get started let’s enumerate the list of ciao workloads.  A workload is a set of instructions for creating an instance (VM or a container) in ciao.  Our new ciao cluster comes with some predefined workloads, which you can see if you execute
+We can then run a few simple commands to check that everything is working correctly.  To get started let’s enumerate the list of workloads.  A workload is a set of instructions for creating an instance (VM or a container).  Our new cluster comes with some predefined workloads, which you can see if you execute
 
 ```shell
 $ ciao-cli workload list
@@ -245,7 +246,7 @@ Finally, should you get an error when running the setup.sh script to start ciao 
 
 ## Creating a k8s Cluster
 
-We’re going to set up our k8s cluster using another tool called kubicle.  Kubicle is a command line tool for creating Kubernetes clusters on top of an existing ciao cluster. It automatically creates ciao workloads for the various k8s roles (master and worker), creates instances from these workloads which self-form into a k8s cluster, and extracts the configuration information needed to control the new cluster from the master node.  Kubicle is installed by the setup.sh script we’ve just run.
+We’re going to set up our k8s cluster using another tool called kubicle.  Kubicle is a command line tool for creating Kubernetes clusters on top of an existing Cloud Integrated Advanced Orchestrator cluster. It automatically creates Cloud Integrated Advanced Orchestrator workloads for the various k8s roles (master and worker), creates instances from these workloads which self-form into a k8s cluster, and extracts the configuration information needed to control the new cluster from the master node.  Kubicle is installed by the setup.sh script we’ve just run.
 
 Creating a Kubernetes cluster is easy. Kubicle only needs one piece of information, the UUID of the image to use for the k8s nodes. Currently, this UUID must refer to an Ubuntu server image, as the workloads created by kubicle for the k8s nodes assume Ubuntu.   Luckily the setup.sh script we ran earlier uploads an Ubuntu server image into ciao’s image service for us.  All we need to do is to determine its UUID.  We can do this using the ciao-cli image list command, e.g.,
 
@@ -287,9 +288,9 @@ To access k8s cluster:
   - export NO_PROXY=$NO_PROXY,198.51.100.2
 ```
 
-When executing this command, make sure to replace the image UUID with the UUID of the Ubuntu Server 16.04 image reported by running ciao-list on your cluster.  You shouldn’t change anything else, i.e., include the --external-ip=198.51.100.2 option verbatim.  The --external-ip option provides an IP address that can be used to administer the k8s cluster and to access services running within it.  The address 198.51.100.2 is safe to use inside a ccloudvm VM created to run ciao.
+When executing this command, make sure to replace the image UUID with the UUID of the Ubuntu Server 16.04 image reported by running ciao-cli image list on your cluster.  You shouldn’t change anything else, i.e., include the --external-ip=198.51.100.2 option verbatim.  The --external-ip option provides an IP address that can be used to administer the k8s cluster and to access services running within it.  The address 198.51.100.2 is safe to use inside a ccloudvm VM created to run the Cloud Integrated Advanced Orchestrator.
 
-Looking at the output of the kubicle command we can see that it has created a number of ciao objects for us.  It has created two new ciao workloads, one for the master and one for the workers.  From these workloads it has created two VM instances, one master node and one worker node.  Finally, it has created an external ip address for us which it has associated with the master node.  We’ll use this address to access the k8s cluster a little later.  Let’s inspect these new objects using the ciao-cli tool.  If you execute ciao-cli workload list, you should now see five workloads, the final two of which have just been created by kubicle.
+Looking at the output of the kubicle command we can see that it has created a number of objects for us.  It has created two new workloads, one for the master and one for the workers.  From these workloads it has created two VM instances, one master node and one worker node.  Finally, it has created an external ip address for us which it has associated with the master node.  We’ll use this address to access the k8s cluster a little later.  Let’s inspect these new objects using the ciao-cli tool.  If you execute ciao-cli workload list, you should now see five workloads, the final two of which have just been created by kubicle.
 
 ```shell
 $ ciao-cli workload list
@@ -354,7 +355,7 @@ nginx-158599303-0p5dj   0/1       ContainerCreating   0          6s
 nginx-158599303-th0fc   0/1       ContainerCreating   0          6s
 ```
 
-So far so good. We've created a deployment of nginx with two pods. Let's now expose that deployment via an external IP address. There is a slight oddity here. We don't actually specify the external IP we passed to the kubicle create command. Instead we need to specify the ciao internal IP address of the master node, which is associated with the external IP address we passed to the create command. The reason for this is due to the way ciao implements external IP addresses. ciao’s networking translates external IP addresses into internal IP addresses and for this reason our k8s services need to be exposed using the ciao internal addresses. To find out which address to use, execute the ciao-cli external-ip list command, e.g.,
+So far so good. We've created a deployment of nginx with two pods. Let's now expose that deployment via an external IP address. There is a slight oddity here. We don't actually specify the external IP we passed to the kubicle create command. Instead we need to specify the internal IP address of the master node, which is associated with the external IP address we passed to the create command. The reason for this is due to the way the Cloud Integrated Advanced Orchestrator implements external IP addresses. Its networking translates external IP addresses into internal IP addresses and for this reason our k8s services need to be exposed using the internal addresses. To find out which address to use, execute the ciao-cli external-ip list command, e.g.,
 
 ```shell
 $ ciao-cli external-ip list
@@ -364,7 +365,7 @@ $ ciao-cli external-ip list
 
 You can see from the above command that the internal IP address associated with the external IP address we specified earlier is 172.16.0.2. So to expose the deployment we simply need to type.
 
-Note: Here 172.16.0.2 is an IP address that is routable within the tenant network created by ciao for the Kubernetes cluster. The IP 198.51.100.2 is the IP address outside of the isolated tenant network with which, the internal IP 172.16.0.2 can be accessed. In a normal setup the IP 198.51.100.2 is either routable at the data center level, or in some cases may be exposed to the internet.
+Note: Here 172.16.0.2 is an IP address that is routable within the tenant network created by the Cloud Integrated Advanced Orchestrator for the Kubernetes cluster. The IP 198.51.100.2 is the IP address outside of the isolated tenant network with which, the internal IP 172.16.0.2 can be accessed. In a normal setup the IP 198.51.100.2 is either routable at the data center level, or in some cases may be exposed to the internet.
 
 ```shell
 $ kubectl expose deployment nginx --external-ip=172.16.0.2
@@ -403,7 +404,7 @@ Commercial support is available at
 
 ## Tearing Down the Clusters
 
-Kubicle created k8s clusters can be deleted with the kubicle delete command. This could of course be done manually, but it would be tedious to do so, particularly with large clusters. Instead use kubicle delete which deletes all the ciao objects (instances, volumes, workloads, pools and external-ips) created to support the k8s cluster in the correct order. For example, to delete the cluster created above simply type.
+Kubicle created k8s clusters can be deleted with the kubicle delete command. This could of course be done manually, but it would be tedious to do so, particularly with large clusters. Instead use kubicle delete which deletes all the objects (instances, volumes, workloads, pools and external-ips) created to support the k8s cluster in the correct order. For example, to delete the cluster created above simply type.
 
 ```shell
 $ kubicle delete

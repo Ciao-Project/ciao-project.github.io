@@ -1,7 +1,7 @@
 ---
-title: The ciao command line
+title: The command line
 permalink: ciao.html
-keywords: ciao, command line, tool
+keywords: CIAO, command line, tool
 ---
 
 ## Introduction
@@ -64,12 +64,12 @@ The commands are:
 Use "ciao-cli command -help" for more information about that command.
 ```
 
-## Ciao environment variables
+## Environment variables
 
-ciao-cli first looks for Ciao specific environment variables to retrieve
-credentials and networking information:
+ciao-cli first looks for Cloud Integrated Advanced Orchestrator specific
+environment variables to retrieve credentials and networking information:
 
-* `CIAO_CONTROLLER` exports the Ciao controller URL
+* `CIAO_CONTROLLER` exports the controller URL
 * `CIAO_CLIENT_CERT_FILE` provides the certificate to authenticate against the controller
 * `CIAO_CA_CERT_FILE` (optional) use the supplied certificate as the CA
 
@@ -88,7 +88,7 @@ or overridden from the `ciao-cli` command line.
 
 ## Controller certificate
 
-ciao-cli interacts with the CIAO controller instance over HTTPS.  As such you
+ciao-cli interacts with the controller instance over HTTPS.  As such you
 will need to have the controller CA certificate available in order to make
 requests. You can either install the CA certificate system-wide:
 
@@ -109,20 +109,20 @@ command line or with the `CIAO_CA_CERT_FILE` environment variable.
 
 ## Priviledged versus non priviledged CIAO users
 
-Administrators of a CIAO cluster are privileged users. They are allowed to run
-each and every ciao-cli commands. Some ciao-cli commands are privileged and can
-only be run by administrators.
+Administrators of a Cloud Integrated Advanced Orchestrator cluster are
+privileged users. They are allowed to run each and every ciao-cli commands. Some
+ciao-cli commands are privileged and can only be run by administrators.
 
 Non privileged commands can be run by all users. Administrators will have to specify
 a tenant/project UUID through the -tenant-id option in order to specify against which
-CIAO tenant/project they're running the command:
+tenant/project they're running the command:
 ```shell
 $ ciao-cli -tenant-id 68a76514-5c8e-40a8-8c9e-0570a11d035b instance list 
 ```
 
  Non privileged users belonging to several tenants/projects will also have to
  specify a tenant/project UUID through the -tenant-id option in order to specify
- against which CIAO tenant/project they're running the command:
+ against which tenant/project they're running the command:
 
 ```shell
 $ ciao-cli -tenant-id 68a76514-5c8e-40a8-8c9e-0570a11d035b instance list
@@ -138,13 +138,13 @@ $ ciao-cli instance list
 
 ## Examples
 
-Let's assume we're running a Ciao cluster with the following settings:
+Let's assume we're running a cluster with the following settings:
 
-* The Ciao controller is running at `ciao-ctl.intel.com`
+* The controller is running at `ciao-ctl.intel.com`
 * The admin certificate is stored in `/etc/pki/ciao/auth-admin.pem`
 * A user certificate with access to one tenant is in `$HOME/auth-user.pem`
 
-This can be defined through the following Ciao rc file:
+This can be defined through the following rc file:
 
 ```shell
 $ cat ciao-cli-example.sh

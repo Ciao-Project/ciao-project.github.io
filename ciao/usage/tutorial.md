@@ -1,17 +1,19 @@
 ---
-title: Creating your first cloud app with ciao
+title: Creating your first cloud app
 permalink: tutorial.html
 keywords: tutorial, guestbook, redis, workloads, instances, external IP
 ---
 
 ## Introduction
 
-This tutorial will demonstrate how to create a simple cloud application
-with ciao.  The application in question is the Guestbook application as used in
-the Kubernetes tutorial [Example: Deploying PHP Guestbook application with
+This tutorial will demonstrate how to create a simple cloud application with the
+Cloud Integrated Advanced Orchestrator.  The application in question is the
+Guestbook application as used in the Kubernetes tutorial [Example: Deploying PHP
+Guestbook application with
 redis](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/).
-The reader will be introduced to many of ciao's concepts and constructs by
-deploying the Guestbook application on a ciao cluster.
+The reader will be introduced to many of the Cloud Integrated Advanced
+Orchestrator's concepts and constructs by deploying the Guestbook application on
+a Cloud Integrated Advanced Orchestrator cluster.
 
 ## The Guestbook application
 
@@ -25,8 +27,9 @@ everything works okay the application demonstrates that the Guestbook PHP
 application can talk to both redis instances and that both redis instances can
 talk to each other.
 
-For this example we are going to use ciao's [development environment](developer.html).
-Please familiarize yourself with this environment before reading any further.
+For this example we are going to use the Cloud Integrated Advanced
+Orchestrator's [development environment](developer.html).  Please familiarize
+yourself with this environment before reading any further.
 
 ## Setup
 
@@ -40,7 +43,7 @@ $ ccloudvm stop
 $ ccloudvm restart -port 8080-80
 ```
 
-if you have not yet created a ccloudvm instance in which to run ciao, type
+if you have not yet created a ccloudvm instance type
 
 ```
 $ ccloudvm create ciao -port 8080-80
@@ -55,11 +58,12 @@ $ ccloudvm connect
 ## Creating the workloads
 
 Our cloud application will consist of two virtual machines and one container.
-The redis master and slave will be deployed as VM instances and the Guestbook application
-as a container.
-Collectively, containers and VMs are referred to as instances in ciao.  Instances
-are created from specifications called workloads.  The ciao development environment
-ships with some default workloads that are mainly used for testing.
+The redis master and slave will be deployed as VM instances and the Guestbook
+application as a container.  Collectively, containers and VMs are referred to as
+instances in the Cloud Integrated Advanced Orchestrator.  Instances are created
+from specifications called workloads.  The Cloud Integrated Advanced
+Orchestrator development environment ships with some default workloads that are
+mainly used for testing.
 
 We're going to need to create some new workloads for our Guestbook
 application.  To create a workload you first need to create two separate YAML
@@ -70,11 +74,12 @@ instances created from the workload should be configured.  We'll need to create
 three new workloads, one for each of our instances, amounting to 6 YAML files in
 total.
 
-The workloads for our VM instances require a backing image from which they will create
-their rootfs.  This backing image must be stored in the ciao image service.  The ciao
-development environment provides a suitable backing image for us.  However, we need
-to discover what its UUID is so that we can refer to it in our workload definitions.
-You can discover this UUID by executing the following command.
+The workloads for our VM instances require a backing image from which they will
+create their rootfs.  This backing image must be stored in the image service.
+The Cloud Integrated Advanced Orchestrator development environment provides a
+suitable backing image for us.  However, we need to discover what its UUID is so
+that we can refer to it in our workload definitions.  You can discover this UUID
+by executing the following command.
 
 {% raw %}
 ```shell

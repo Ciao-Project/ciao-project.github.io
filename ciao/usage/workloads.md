@@ -1,13 +1,13 @@
 ---
 title: Working with workloads
 permalink: workloads.html
-keywords: ciao, command line, tool
+keywords: CIAO, command line, tool
 ---
 
 ## Workload examples
 
-A workload can be uploaded into the ciao datastore via the ciao-cli
-command.
+A workload can be uploaded into the Cloud Integrated Advanced Orchestrator
+datastore via the ciao-cli command.
 
 ```shell
 $ ciao-cli workload create -yaml my_workload.yaml
@@ -19,9 +19,9 @@ the cloud-init user data file used to initialise the instance on first boot.
 The first yaml file is passed to the ciao-cli workload create command as an
 argument, e.g., my_workload.yaml above.  It contains a reference to the second file.
 
-The ciao [source code](https://github.com/ciao-project/ciao/tree/master/ciao-cli/examples)
-includes some sample workloads that illustrate a few
-basic workload definitions.
+The Cloud Integrated Advanced Orchestrator [source
+code](https://github.com/ciao-project/ciao/tree/master/ciao-cli/examples)
+includes some sample workloads that illustrate a few basic workload definitions.
 
 ## Workload properties yaml file
 
@@ -42,9 +42,9 @@ image_name: "ubuntu:latest"
 displayed when you list workloads with `ciao-cli workload list`.
 
 There are two types of workloads - container based, and vm based. The `vm_type`
-string specifies whether this workload is a container or a VM. Currently ciao
-supports only docker based containers, and qemu for vms. Valid values for
-vm_type are `docker` or `qemu`.
+string specifies whether this workload is a container or a VM. Currently the
+Cloud Integrated Advanced Orchestrator supports only docker based containers,
+and qemu for vms. Valid values for vm_type are `docker` or `qemu`.
 
 The above example is for a container workload. The `vm_type` is set to `docker`
 and the docker hub image name is provided by the `image_name` value.
@@ -53,7 +53,7 @@ For VMs, the configuration would be slightly different. `description` is still
 provided, however, `vm_type` is set to `qemu`. Additionally, a `fw_type` is
 required to specify whether the image that is provided has a UEFI based
 firmware, or a legacy firmware. If the workload should be booted from an
-image, the image must have already been added to the ciao image service.
+image, the image must have already been added to the image service.
 
 ```yaml
 description: "My favorite pet VM"
@@ -67,7 +67,7 @@ disks:
     bootable: true
 ```
 
-Workloads may also be specified to boot from volumes created in ciao's volume
+Workloads may also be specified to boot from volumes created in the volume
 service. To create a workload which boots from an existing volume include a
 definition for a bootable disk.
 
@@ -91,7 +91,7 @@ disks:
   ephemeral: true
 ```
 
-To attach a volume that has already been created in the ciao volume service,
+To attach a volume that has already been created in the volume service,
 specify the volume_id of the volume to be attached.
 
 ```yaml
@@ -156,9 +156,9 @@ hostname.
 
 ## Cloud config yaml file
 
-Below is an example ciao cloud config file. ciao cloud config files have a
-cloud-config section, followed by a user data section.  These files use
-the cloud-init userdata format as described
+Below is an example cloud config file. Cloud Integrated Advanced Orchestrator
+cloud config files have a cloud-config section, followed by a user data section.
+These files use the cloud-init userdata format as described
 [here](http://cloudinit.readthedocs.io/en/latest/index.html).  The cloud-config
 section must be prefaced by the `---` separator.
 

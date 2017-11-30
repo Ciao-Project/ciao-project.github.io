@@ -1,5 +1,5 @@
 ---
-title: The ciao development environment
+title: The development environment
 permalink: developer.html
 keywords: singlevm, development, ccloudvm
 ---
@@ -9,7 +9,7 @@ Developing cluster software is complicated if you must actually run a whole
 cluster on a set of physical machines.  This begs for a development environment
 that is self contained and can be run without any setup.  
 
-The goals for the Ciao development environment are that it:
+The goals for the Cloud Integrated Advanced Orchestrator development environment are that it:
 
 - Requires very minimal setup by the user
 - Does not affect the user's development system in any manner (i.e. the user
@@ -17,14 +17,14 @@ The goals for the Ciao development environment are that it:
 - Supports modes that allow it to run on a range of devices from powerful
   workstations to less powerful laptops
 - Provides the ability to validate all code changes the user makes against
-  the Ciao release criterion
+  the project's release criterion
 
-This page documents a way to set up an entire Ciao cluster inside a single 
-machine.  This cluster-in-a-machine mode is ideal for developers that desire 
-the ability to build Ciao from sources, make changes and perform quick end to 
-end functional integration testing without requiring multiple machines/VM's, 
-creating a custom networking environment or maintaining a bevy of physical 
-machines and a physical network.
+This page documents a way to set up an entire Cloud Integrated Advanced
+Orchestrator cluster inside a single machine.  This cluster-in-a-machine mode is
+ideal for developers that desire the ability to build the project from source,
+make changes and perform quick end to end functional integration testing without
+requiring multiple machines/VM's, creating a custom networking environment or
+maintaining a bevy of physical machines and a physical network.
 
 We support two modes of operation:
 
@@ -35,19 +35,19 @@ We support two modes of operation:
   itself
 
 The ccloudvm mode is the preferred mode of development on systems that have 
-the resources and CPU capabilities needed, as it fully isolates the Ciao 
-virtual cluster and sets up an environment in which Ciao is known to work 
-seamlessly. In addition, the ccloudvm mode does not require any changes to 
-the user's network firewall setup. However, ccloudvm mode does require 
-VT-x nesting to be supported by the host.
+the resources and CPU capabilities needed, as it fully isolates the Cloud
+Integrated Advanced Orchestrator virtual cluster and sets up an environment
+in which it is known to work seamlessly. In addition, the ccloudvm mode does
+not require any changes to the user's network firewall setup. However, ccloudvm
+mode does require VT-x nesting to be supported by the host.
 
 The bare metal mode is the highest performance mode, but may require some 
 network firewall modification. It also uses less resources and can run on 
 machines whose CPUs do not support VT-x nesting.
 
-In both modes Ciao is configured in a special all in one development mode 
-where cluster nodes have dual roles (i.e launcher can be a Network Node and 
-a Compute Node at the same time)
+In both modes the cluster is configured in a special all in one development mode
+where cluster nodes have dual roles (i.e launcher can be a Network Node and a
+Compute Node at the same time)
 
 In the text below **machine** refers to the ccloudvm VM in the case of the 
 ccloudvm mode, it refers to the host system in the case of the bare metal mode.
@@ -61,7 +61,7 @@ ccloudvm mode, it refers to the host system in the case of the bare metal mode.
       6. Machine Local DHCP Server
       ...
 
-The machine acts as the Ciao compute node, network node, ciao-controller, 
+The machine acts as the compute node, network node, ciao-controller,
 ciao-scheduler and also hosts other openstack and dhcp services.
 
 ## Graphical Overview
@@ -109,12 +109,13 @@ On the host install the latest release of go for your distribution
 [Installing Go](https://golang.org/doc/install).
 
 {% include warning.html content="NOTE: Go version 1.8 or later is required for
-Ciao. Ciao will not work with older version of Go. Hence it is best you download
-and install the latest version of Go if you distro is not on Go 1.8." %}
+the Cloud Integrated Advanced Orchestrator. It will not work with older version
+of Go. Hence it is best you download and install the latest version of Go if your
+distro is not on Go 1.8 or above." %}
 
 # Getting Started with Configurable Cloud VM (ccloudvm)
 Ccloudvm is a small utility for setting up a VM that contains
-everything you need to run ciao's Single VM. All you need to have
+everything you need to run Single VM. All you need to have
 installed on your machine is:
 
 - Go 1.8 or greater
@@ -129,7 +130,7 @@ $GOPATH/bin/ccloudvm create ciao
 ccloudvm will install some needed dependencies on your local PC such
 as qemu and xorriso. It will then download an Ubuntu Cloud Image and
 create a VM based on this image. It will boot the VM and install in that
-VM everything you need to run ciao Single VM, including docker, ceph,
+VM everything you need to run Single VM, including docker, ceph,
 go, gcc, etc. When ccloudvm create has finished you can connect to the
 newly created VM with
 
@@ -137,8 +138,8 @@ newly created VM with
 $GOPATH/bin/ccloudvm connect
 ```
 
-Your host's GOPATH is mounted inside the VM. Thus you can edit your
-the ciao code on your host machine and test in Single VM.
+Your host's GOPATH is mounted inside the VM. Thus you can edit Go code on your
+host machine and test in Single VM.
 
 
 ## Proxies
@@ -159,11 +160,11 @@ Install latest docker for your distribution based on the instructions from
 Docker
 [Installing Docker](https://docs.docker.com/engine/installation/).
 
-## Install ciao dependencies
+## Install Cloud Integrated Advanced Orchestrator dependencies
 
 Install the following packages which are required:
   1. qemu-system-x86_64 and qemu-img, to launch the VMs and create qcow images
-  2. gcc, required to build some of the ciao dependencies
+  2. gcc, required to build some of the dependencies
   3. dnsmasq, required to setup a test DHCP server
 
 On clearlinux all of these dependencies can be satisfied by installing the following bundles:
@@ -200,7 +201,7 @@ echo 1 > /proc/sys/net/ipv4/ip_forward
 
 ## Download and build the sources
 
-Download and build the ciao sources:
+Download and build the Cloud Integrated Advanced Orchestrator sources:
 
 ```
 cd $GOPATH/src
@@ -209,12 +210,12 @@ go get -v -u -tags debug github.com/ciao-project/ciao/...
 
 You should see no errors.
 
-# Verify that Ciao is fully functional  using the **machine**
+# Verify that the Cloud Integrated Advanced Orchestrator is fully functional
 
 Now that you have the machine setup (either a bare metal setup or a 
 ccloudvm VM setup).
 
-You can now quickly verify that all aspects of Ciao including VM launch, 
+You can now quickly verify that all aspects of the cluster including VM launch, 
 container launch, and networking.  
 
 These steps are performed inside the machine.
@@ -239,20 +240,18 @@ The verify.sh script will:
 - Test for ssh reach ability into VMs with private and external IPs
 - Delete all the VM's and Container that were created
 
-If the script reports success, it indicates to the developer that any changes 
-made have not broken any functionality across all the Ciao components.
+If the script reports success, it indicates to the developer that any changes
+made have not broken any functionality across all the Cloud Integrated Advanced
+Orchestrator components.
 
 To quickly test any changes you make run verify.sh and observe no failures. 
 
-Prior to sumitting a change request to ciao, please run the BAT tests below
-in addition to verify.sh to ensure your changes meet the ciao acceptance
-criterion.
-
-Meeting the goal originally outlined at the top of the page, build/setup/running 
-your cluster all-in-one all transpires quickly and easily from the single 
-script.  The time needed for ./setup.sh and ./verify.sh to build ciao from 
-source, configure it components into a virtual cluster, then launch and 
-teardown containers and VMs is on the order of one minute total elapsed time.
+Prior to submitting a change request to the Cloud Integrated Advanced
+Orchestrator, please run the BAT tests below in addition to verify.sh to ensure
+your changes meet the ciao acceptance criterion.  The time needed for ./setup.sh
+and ./verify.sh to build the project from source, configure its components into
+a virtual cluster, then launch and teardown containers and VMs, is in the order
+of one minute total elapsed time.
 
 # Ongoing Usage
 
@@ -260,11 +259,12 @@ Once it's finished, the setup.sh script leaves behind a virtual cluster
 which can be used to perform manual tests.  These tests are performed using 
 the [ciao-cli](https://github.com/ciao-project/ciao/blob/master/ciao-cli/README.md) tool.  
 
-The ciao-cli tool requires that some environment variables be set up before it 
-will work properly.  These variables contain the URLs of the various ciao 
-services and the credentials needed to access these services.  The setup.sh 
-script creates a shell source that contains valid values for the newly set up 
-cluster.  To initialise these variables you just need to source that file, e.g,
+The ciao-cli tool requires that some environment variables be set up before it
+will work properly.  These variables contain the URLs of the various Cloud
+Integrated Advanced Orchestrator services and the credentials needed to access
+these services.  The setup.sh script creates a shell source that contains valid
+values for the newly set up cluster.  To initialise these variables you just
+need to source that file, e.g,
 
 ```
 . ~/local/demo.sh
