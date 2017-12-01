@@ -77,24 +77,19 @@ total.
 The workloads for our VM instances require a backing image from which they will
 create their rootfs.  This backing image must be stored in the image service.
 The Cloud Integrated Advanced Orchestrator development environment provides a
-suitable backing image for us.  However, we need to discover what its UUID is so
-that we can refer to it in our workload definitions.  You can discover this UUID
-by executing the following command.
+suitable backing image for us.  We need to specify the name of this image,
+'ubuntu-server-16.04', in our workload definitions.  You can check that the
+image is present in your cluster by executing the following command, which will
+print the names of all the available images.
 
 {% raw %}
 ```shell
-$ ciao-cli image list -f '{{range (filterContains . "Name" "Ubuntu Server")}}{{println .ID}}{{end}}'
-046aa079-7614-494b-9044-06587510213d
+$ ciao-cli image list -f '{{range .}}{{println .Name}}{{end}}'
+ubuntu-server-16.04
 ```
 {% endraw %}
 
-The reported UUID of the Ubuntu Server backing image is 046aa079-7614-494b-9044-06587510213d.
-A different UUID will be reported on your own cluster.  You will need to note it down
-for future use.
-
-Now we're ready to create our workload definition files.  Create a new directory somewhere inside your ccloudvm VM, e.g., ~/examples.  Enter this directory and create the following files,
-being careful to specify the correct UUID for disks->source->id in the redis-master.yaml
-and redis-slave.yaml files.
+Now we're ready to create our workload definition files.  Create a new directory somewhere inside your ccloudvm VM, e.g., ~/examples.  Enter this directory and create the following files.
 
 *~/example/redis-master.yaml*
 
@@ -109,7 +104,7 @@ cloud_init: redis-master-cloud.yaml
 disks:
   - source:
        type: image
-       source: "046aa079-7614-494b-9044-06587510213d"
+       source: ubuntu-server-16.04
     ephemeral: true
     bootable: true
 ```
@@ -141,7 +136,7 @@ cloud_init: redis-slave-cloud.yaml
 disks:
   - source:
        type: image
-       source: "046aa079-7614-494b-9044-06587510213d"
+       source: ubuntu-server-16.04
     ephemeral: true
     bootable: true
 ```
