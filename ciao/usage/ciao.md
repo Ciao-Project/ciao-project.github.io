@@ -153,12 +153,6 @@ export CIAO_CONTROLLER=ciao-ctl.intel.com
 export CIAO_CLIENT_CERT_FILE=$HOME/auth-user.pem
 ```
 
-### Cluster status (Privileged)
-
-```shell
-$ CIAO_CLIENT_CERT_FILE=/etc/pki/ciao/auth-admin.pem ciao-cli node status
-```
-
 ### List all compute nodes (Privileged)
 
 ```shell
