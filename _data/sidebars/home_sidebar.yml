@@ -10,6 +10,9 @@ entries:
     - title: The ciao project
       url: /index.html
       output: web
+    - title: Architecture
+      url: /architecture.html
+      output: web
   - title: Setup
     output: web
     folderitems:

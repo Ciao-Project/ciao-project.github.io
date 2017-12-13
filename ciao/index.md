@@ -8,6 +8,13 @@ The Cloud Integrated Advanced Orchestrator (CIAO) aims to provide an easy to
 deploy, secure, scalable cloud orchestration system which handles virtual
 machines, containers, and bare metal apps agnostically as generic workloads.
 
+## Overview
+
+The Cloud Integrated Advanced Orchestrator is a complicated piece of
+software.  It introduces its own concepts, terminology and innovative
+architecture.  For an overview of these concepts and how they all fit together,
+the reader is referred to the [architecture document](/architecture.html).
+
 ## Getting started
 
 The easiest way to get to know the Cloud Integrated Advanced Orchestrator is to
