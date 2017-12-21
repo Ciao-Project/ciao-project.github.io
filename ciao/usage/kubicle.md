@@ -196,9 +196,9 @@ Verify the cluster is working correctly by running
 
 ~/local/verify.sh
 
-Use ciao-cli to manipulate and inspect the cluster, e.g., 
+Use ciao to manipulate and inspect the cluster, e.g., 
 
-ciao-cli instance add --workload=ab68111c-03a6-11e6-87de-001320fb6e31 --instances=1
+ciao create instance ab68111c-03a6-11e6-87de-001320fb6e31 --instances=1
 
 When you're finished run the following command to cleanup
 
@@ -214,22 +214,12 @@ $ . ~/local/demo.sh
 We can then run a few simple commands to check that everything is working correctly.  To get started let’s enumerate the list of workloads.  A workload is a set of instructions for creating an instance (VM or a container).  Our new cluster comes with some predefined workloads, which you can see if you execute
 
 ```shell
-$ ciao-cli workload list
-Workload 1
-	Name: Ubuntu latest test container
-	UUID:332178db-aeeb-463c-b551-09780cfd7c57
-	CPUs: 2
-	Memory: 128 MB
-Workload 2
-	Name: Debian latest test container
-	UUID:373eeebd-3daa-4377-a73d-2bf627f35977
-	CPUs: 2
-	Memory: 128 MB
-Workload 3
-	Name: Ubuntu test VM
-	UUID:0495f35c-f1ab-46fa-9a07-676a210f383e
-	CPUs: 2
-	Memory: 256 MB
+$ ciao list workloads
+ID                                   Name                         CPUs    Mem     
+73250276-5f2d-4d22-840a-b8faec63ba0d Clear Linux test VM          2       128     
+9e562fbc-4c26-4ed9-a2c8-8e2b9806f1af Ubuntu latest test container 2       128     
+ae3d16e7-3b7a-47f9-a27a-713a4c4af6d0 Debian latest test container 2       128     
+3afb3866-ef88-4289-9369-d550af67a2ea Ubuntu test VM               2       256    
 ```
 
 There are two workloads for creating container instances and one for creating a VM instance.  We’ll be creating some new VM workloads later on for our k8s master and worker nodes.
@@ -237,7 +227,7 @@ There are two workloads for creating container instances and one for creating a 
 Now let’s enumerate the list of instances.  This can be done as follows
 
 ```shell
-$ ciao-cli instance list
+$ ciao list instances
 ```
 
 You should see that there are no instances.  This will change when we set up our k8s cluster.
@@ -248,24 +238,12 @@ Finally, should you get an error when running the setup.sh script to start ciao 
 
 We’re going to set up our k8s cluster using another tool called kubicle.  Kubicle is a command line tool for creating Kubernetes clusters on top of an existing Cloud Integrated Advanced Orchestrator cluster. It automatically creates Cloud Integrated Advanced Orchestrator workloads for the various k8s roles (master and worker), creates instances from these workloads which self-form into a k8s cluster, and extracts the configuration information needed to control the new cluster from the master node.  Kubicle is installed by the setup.sh script we’ve just run.
 
-Creating a Kubernetes cluster is easy. Kubicle only needs one piece of information, the UUID of the image to use for the k8s nodes. Currently, this UUID must refer to an Ubuntu server image, as the workloads created by kubicle for the k8s nodes assume Ubuntu.   Luckily the setup.sh script we ran earlier uploads an Ubuntu server image into ciao’s image service for us.  All we need to do is to determine its UUID.  We can do this using the ciao-cli image list command, e.g.,
+Creating a Kubernetes cluster is easy. Kubicle only needs one piece of information, the name of the image to use for the k8s nodes. Currently, this name must refer to an Ubuntu server image, as the workloads created by kubicle for the k8s nodes assume Ubuntu.   Luckily the setup.sh script we ran earlier uploads an Ubuntu server image into ciao’s image service for us. 
+
+Now we simply need to run the kubicle create command specifying the name of the above image, e.g.,
 
 ```shell
-$ ciao-cli image list
-Image #1
-	Name             [Ubuntu Server 16.04]
-	Size             [2361393152 bytes]
-	UUID             [bf36c771-d5cc-47c4-b965-78eaca505229]
-	Status           [active]
-	Visibility       [public]
-	Tags             []
-	CreatedAt        [2017-06-07 10:41:49.37279755 +0000 UTC]
-```
-
-Now we simply need to run the kubicle create command specifying the UUID (bf36c771-d5cc-47c4-b965-78eaca505229) of the above image, e.g.,
-
-```shell
-$ kubicle create --external-ip=198.51.100.2 bf36c771-d5cc-47c4-b965-78eaca505229
+$ kubicle create --external-ip=198.51.100.2 ubuntu-server-16.04
 Creating master
 Creating workers
 Mapping external-ip
@@ -288,34 +266,29 @@ To access k8s cluster:
   - export NO_PROXY=$NO_PROXY,198.51.100.2
 ```
 
-When executing this command, make sure to replace the image UUID with the UUID of the Ubuntu Server 16.04 image reported by running ciao-cli image list on your cluster.  You shouldn’t change anything else, i.e., include the --external-ip=198.51.100.2 option verbatim.  The --external-ip option provides an IP address that can be used to administer the k8s cluster and to access services running within it.  The address 198.51.100.2 is safe to use inside a ccloudvm VM created to run the Cloud Integrated Advanced Orchestrator.
+You shouldn’t change anything else, i.e., include the --external-ip=198.51.100.2 option verbatim.  The --external-ip option provides an IP address that can be used to administer the k8s cluster and to access services running within it.  The address 198.51.100.2 is safe to use inside a ccloudvm VM created to run the Cloud Integrated Advanced Orchestrator.
 
-Looking at the output of the kubicle command we can see that it has created a number of objects for us.  It has created two new workloads, one for the master and one for the workers.  From these workloads it has created two VM instances, one master node and one worker node.  Finally, it has created an external ip address for us which it has associated with the master node.  We’ll use this address to access the k8s cluster a little later.  Let’s inspect these new objects using the ciao-cli tool.  If you execute ciao-cli workload list, you should now see five workloads, the final two of which have just been created by kubicle.
+Looking at the output of the kubicle command we can see that it has created a number of objects for us.  It has created two new workloads, one for the master and one for the workers.  From these workloads it has created two VM instances, one master node and one worker node.  Finally, it has created an external ip address for us which it has associated with the master node.  We’ll use this address to access the k8s cluster a little later.  Let’s inspect these new objects using the ciao tool.  If you execute `ciao list workloads`, you should now see five workloads, the final two of which have just been created by kubicle.
 
 ```shell
-$ ciao-cli workload list
-...
-[ SNIP ] 
-...
-Workload 4
-	Name: k8s master
-	UUID:a92ce5be-922d-445a-ab3c-8f8a42e043ac
-	CPUs: 1
-	Memory: 1024 MB
-Workload 5
-	Name: k8s worker
-	UUID:ead96d3d-b23f-4c43-9921-4756d274e51d
-	CPUs: 1
-	Memory: 2048 MB
+$ ciao list workloads
+ID                                   Name                         CPUs    Mem     
+73250276-5f2d-4d22-840a-b8faec63ba0d Clear Linux test VM          2       128     
+9e562fbc-4c26-4ed9-a2c8-8e2b9806f1af Ubuntu latest test container 2       128     
+ae3d16e7-3b7a-47f9-a27a-713a4c4af6d0 Debian latest test container 2       128     
+3afb3866-ef88-4289-9369-d550af67a2ea Ubuntu test VM               2       256     
+345568aa-a14b-4e01-8ed6-af42a7b220e9 k8s master                   1       1024    
+ca3eaf77-2542-4e3c-8cc9-bf8202196d4e k8s worker                   1       2048    
+
 ```
 
-Now let’s enumerate our instances, i.e. our running VMs and containers using the ciao-cli instance list command.  You may remember that the last time we ran this command there was no output.  Running it again should show that we have two VM instances running.
+Now let’s enumerate our instances, i.e. our running VMs and containers using the `ciao list instances` command.  You may remember that the last time we ran this command there was no output.  Running it again should show that we have two VM instances running.
 
 ```shell
-$ ciao-cli instance list
-# UUID                                 Status Private IP SSH IP        SSH PORT
-1 f6c494d1-e4b4-4c26-a663-0dab4dfb15db active 172.16.0.2 198.51.100.59 33002
-2 aaed1545-2125-4c59-8711-583c26c3299b active 172.16.0.3 198.51.100.59 33003
+$ ciao list instances
+ID                                   Name    Status  SSHIP         SSHPort 
+6db9f5ac-3406-4e74-9a42-18bb2c13cb08         active  198.51.100.91 33003   
+aba48378-be3f-4499-abf7-9e7cb6b2511d         active  198.51.100.91 33002  
 ```
 
 We can manipulate our newly formed k8s cluster using the kubectl tool.  Kubectl expects an environment variable, KUBECONFIG, to be set to the path of a configuration file which contains the configuration settings for the cluster.  Luckily for us, kubicle creates a configuration file for our new cluster and even provides us with the command needed to initialise KUBECONFIG.  If you scroll back up to where you executed the kubicle command you should see the following.
@@ -355,10 +328,10 @@ nginx-158599303-0p5dj   0/1       ContainerCreating   0          6s
 nginx-158599303-th0fc   0/1       ContainerCreating   0          6s
 ```
 
-So far so good. We've created a deployment of nginx with two pods. Let's now expose that deployment via an external IP address. There is a slight oddity here. We don't actually specify the external IP we passed to the kubicle create command. Instead we need to specify the internal IP address of the master node, which is associated with the external IP address we passed to the create command. The reason for this is due to the way the Cloud Integrated Advanced Orchestrator implements external IP addresses. Its networking translates external IP addresses into internal IP addresses and for this reason our k8s services need to be exposed using the internal addresses. To find out which address to use, execute the ciao-cli external-ip list command, e.g.,
+So far so good. We've created a deployment of nginx with two pods. Let's now expose that deployment via an external IP address. There is a slight oddity here. We don't actually specify the external IP we passed to the kubicle create command. Instead we need to specify the internal IP address of the master node, which is associated with the external IP address we passed to the create command. The reason for this is due to the way the Cloud Integrated Advanced Orchestrator implements external IP addresses. Its networking translates external IP addresses into internal IP addresses and for this reason our k8s services need to be exposed using the internal addresses. To find out which address to use, execute the `ciao list external-ips` command, e.g.,
 
 ```shell
-$ ciao-cli external-ip list
+$ ciao list external-ips
 # ExternalIP   InternalIP InstanceID
 1 198.51.100.2 172.16.0.2 38ec8bd5-3c50-477f-9b59-b8b332609551
 ```

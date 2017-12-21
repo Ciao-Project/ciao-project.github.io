@@ -76,7 +76,7 @@ $ go test -v ./...
 This does not work.  The reason is that when go test is run with a
 wildcard and that wildcard matches multiple packages the tests for all of these
 packages are run in parallel.  As all tests are run in the same tenant and some
-tests call ciao-cli instance delete -all the tests from different packages can
+tests call "ciao delete instance --all" the tests from different packages can
 interfere with each other.  The introduction of BAT tests for the evacuate
 command complicates things further as tests that evacuate a node are likely to
 interfere with other tests as they will cause the instances of those tests to
