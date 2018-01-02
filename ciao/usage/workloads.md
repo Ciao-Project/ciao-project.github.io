@@ -7,21 +7,18 @@ keywords: CIAO, command line, tool
 ## Workload examples
 
 A workload can be uploaded into the Cloud Integrated Advanced Orchestrator
-datastore via the ciao-cli command.
+datastore via the `ciao` command.
 
 ```shell
-$ ciao-cli workload create -yaml my_workload.yaml
+$ ciao create workload my_workload.yaml
 ```
 
 A workload consists of two yaml files.  The first
 defines the properties and resources the workload needs while the second contains
 the cloud-init user data file used to initialise the instance on first boot.
-The first yaml file is passed to the ciao-cli workload create command as an
+The first yaml file is passed to the `ciao create workload` command as an
 argument, e.g., my_workload.yaml above.  It contains a reference to the second file.
 
-The Cloud Integrated Advanced Orchestrator [source
-code](https://github.com/ciao-project/ciao/tree/master/ciao-cli/examples)
-includes some sample workloads that illustrate a few basic workload definitions.
 
 ## Workload properties yaml file
 
@@ -39,7 +36,7 @@ image_name: "ubuntu:latest"
 ```
 
 `description` is just a human readable string which will be
-displayed when you list workloads with `ciao-cli workload list`.
+displayed when you list workloads with `ciao list workloads`.
 
 There are two types of workloads - container based, and vm based. The `vm_type`
 string specifies whether this workload is a container or a VM. Currently the
@@ -125,7 +122,7 @@ requirements:
 ```
 
 Finally, the filename for the cloud config file must be included in the
-workload definition. This file must be readable by ciao-cli.
+workload definition. This file must be readable by `ciao`.
 
 ```yaml
 cloud_init: "fedora_vm.yaml"

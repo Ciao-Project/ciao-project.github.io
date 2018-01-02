@@ -107,7 +107,7 @@ Once workloads are created you can create a new instance and experiment with
 the Cloud Integrated Advanced Orchestrator cluster.
 
 ```
-ciao-cli instance add -workload <workload id>
+ciao create workload <workload id>
 ```
 
 ## Updating the cluster

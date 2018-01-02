@@ -149,7 +149,7 @@ When you run ccloudvm create, ccloudvm looks in its environment for
 proxy variables such as http_proxy, https_proxy and no_proxy.  If it
 finds them it ensures that these proxies are correctly configured for
 all the software that it installs and uses inside the VM, e.g., apt, docker,
-wget, ciao-cli.  So if your development machine is sitting
+wget, ciao.  So if your development machine is sitting
 behind a proxy, ensure you have your proxy environment variables set
 before running ccloudvm.
 
@@ -257,9 +257,9 @@ of one minute total elapsed time.
 
 Once it's finished, the setup.sh script leaves behind a virtual cluster 
 which can be used to perform manual tests.  These tests are performed using 
-the [ciao-cli](https://github.com/ciao-project/ciao/blob/master/ciao-cli/README.md) tool.  
+the ciao tool.  
 
-The ciao-cli tool requires that some environment variables be set up before it
+The ciao tool requires that some environment variables be set up before it
 will work properly.  These variables contain the URLs of the various Cloud
 Integrated Advanced Orchestrator services and the credentials needed to access
 these services.  The setup.sh script creates a shell source that contains valid
@@ -273,7 +273,7 @@ need to source that file, e.g,
 To check everything is working try the following command
 
 ```
-ciao-cli workload list
+ciao list workloads
 ```
 
 # Running the BAT tests

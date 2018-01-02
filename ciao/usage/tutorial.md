@@ -84,7 +84,7 @@ print the names of all the available images.
 
 {% raw %}
 ```shell
-$ ciao-cli image list -f '{{range .}}{{println .Name}}{{end}}'
+$ ciao list images -f '{{range .}}{{println .Name}}{{end}}'
 ubuntu-server-16.04
 ```
 {% endraw %}
@@ -182,71 +182,51 @@ runcmd:
 ```
 
 Now we need to create the workloads themselves.  This can be done using the
-ciao-cli workload create command, as shown below.
+`ciao create workload` command, as shown below.
 
 ```shell
-$ ciao-cli workload create --yaml redis-master.yaml
-Created new workload: 0996f1fa-17f8-46cf-afea-1c5bf6797a63
-$ ciao-cli workload create --yaml redis-slave.yaml
-Created new workload: 2757da4f-54d1-446c-99a6-d6644eac927c
-$ ciao-cli workload create --yaml guestbook.yaml
-Created new workload: c9037a59-939b-435b-b19e-66d044add570
+$ ciao create workload redis-master.yaml
+$ ciao create workload redis-slave.yaml
+$ ciao create workload guestbook.yaml
 ```
 
 We can check everything has worked correctly by enumerating the defined workloads
-using the ciao-cli workload list command.  You should see the default workloads
+using the `ciao list workloads` command.  You should see the default workloads
 provided with the SingleVM setup in addition to our newly created workloads.
 
 ```shell
-# ciao-cli workload list
-Workload 1
-	Name: Ubuntu latest test container
-	UUID:dbb0dc45-7d3d-4a11-89fe-9784e52c2e5f
-	CPUs: 2
-	Memory: 128 MB
-Workload 2
-	Name: Debian latest test container
-	UUID:90b7b092-6b3c-43ed-aef9-22f8c7545b0a
-	CPUs: 2
-	Memory: 128 MB
-Workload 3
-	Name: Ubuntu test VM
-	UUID:181cae48-aabb-4e02-9586-64e750d5d57c
-	CPUs: 2
-	Memory: 256 MB
-Workload 4
-	Name: Redis Master
-	UUID:0996f1fa-17f8-46cf-afea-1c5bf6797a63
-	CPUs: 2
-	Memory: 512 MB
-Workload 5
-	Name: Redis Slave
-	UUID:2757da4f-54d1-446c-99a6-d6644eac927c
-	CPUs: 2
-	Memory: 512 MB
-Workload 6
-	Name: Guestbook container
-	UUID:c9037a59-939b-435b-b19e-66d044add570
-	CPUs: 2
-	Memory: 100 MB
+$ ciao list workloads
+ID                                   Name                         CPUs    Mem     
+73250276-5f2d-4d22-840a-b8faec63ba0d Clear Linux test VM          2       128     
+9e562fbc-4c26-4ed9-a2c8-8e2b9806f1af Ubuntu latest test container 2       128     
+ae3d16e7-3b7a-47f9-a27a-713a4c4af6d0 Debian latest test container 2       128     
+3afb3866-ef88-4289-9369-d550af67a2ea Ubuntu test VM               2       256     
+345568aa-a14b-4e01-8ed6-af42a7b220e9 k8s master                   1       1024    
+ca3eaf77-2542-4e3c-8cc9-bf8202196d4e k8s worker                   1       2048    
+3e673aa2-925a-4e52-abf9-fbc822a42d07 Redis Master                 2       512     
+8c62075f-67d5-4ea7-8bd0-613e7378508b Redis Slave                  2       512     
+aff2346b-45c1-4325-aa67-4d1d8bffe9a6 Guestbook container          2       100  
 ```
 
 ## Creating the instances
 
 Now we have our workloads we can create our instances.  Instances are created
-using the ciao-cli create command.  When we create an instance we need to specify
+using the ciao create command.  When we create an instance we need to specify
 the UUID of the workload that contains the instance specification.  Our three
 Guestbook instances can be created as follows.  Note that the workload UUIDs are
 randomly generated so these commands will need to be modified slightly to reflect the
 workload UUIDs used in your cluster.
 
 ```shell
-$ ciao-cli instance add --workload 0996f1fa-17f8-46cf-afea-1c5bf6797a63 -name 'redis-master'
-Created new (pending) instance: 2111f605-d02c-489d-acf0-05a10d24833b
-$ ciao-cli instance add --workload 2757da4f-54d1-446c-99a6-d6644eac927c -name 'redis-slave'
-Created new (pending) instance: 6bcf6caa-a77e-4fe2-b227-c9bd4122340a
-$ ciao-cli instance add --workload c9037a59-939b-435b-b19e-66d044add570
-Created new (pending) instance: b40f3aab-908f-4377-a6bf-e9b7703a0684
+$ ciao create instance 3e673aa2-925a-4e52-abf9-fbc822a42d07 --name "redis-master"
+ID                                   Name         Status  SSHIP   SSHPort 
+7d5b94d1-ab1c-4c06-9909-772934dd7695 redis-master pending         0       
+$ ciao create instance 8c62075f-67d5-4ea7-8bd0-613e7378508b --name "redis-slave"
+ID                                   Name        Status  SSHIP   SSHPort 
+73e97c33-2e98-4737-b5e8-5fbe635d9604 redis-slave pending         0       
+$ ciao create instance aff2346b-45c1-4325-aa67-4d1d8bffe9a6 --name "guestbook"
+ID                                   Name      Status  SSHIP   SSHPort 
+ab8a1269-e366-45d0-ace3-72cac73759cf guestbook pending         0    
 ```
 
 When creating instances we have the option of specifying a name.  The
@@ -258,14 +238,15 @@ instances when creating them our Guestbook container would not be able to
 store or retrieve data.
 
 We can check to see that our instances have started correctly using the
-ciao-cli instance list command.
+`ciao list instances` command.
 
 ```shell
-$ ciao-cli instance list
-# UUID                                 Status Private IP SSH IP        SSH PORT
-1 2111f605-d02c-489d-acf0-05a10d24833b active 172.16.0.2 198.51.100.84 33002
-2 6bcf6caa-a77e-4fe2-b227-c9bd4122340a active 172.16.0.3 198.51.100.84 33003
-3 b40f3aab-908f-4377-a6bf-e9b7703a0684 active 172.16.0.4 198.51.100.84 33004
+$ ciao list instances
+ID                                   Name         Status  SSHIP         SSHPort 
+73e97c33-2e98-4737-b5e8-5fbe635d9604 redis-slave  active  198.51.100.91 33002   
+7d5b94d1-ab1c-4c06-9909-772934dd7695 redis-master active  198.51.100.91 33003   
+ab8a1269-e366-45d0-ace3-72cac73759cf guestbook    active  198.51.100.91 33004   
+
 ```
 
 You should see that you have three active instances running.
@@ -283,12 +264,9 @@ an IP address to this pool, and finally we need to map that IP to our instance.
 This can be done as follows.
 
 ```shell
-$ CIAO_CLIENT_CERT_FILE=$CIAO_ADMIN_CLIENT_CERT_FILE ciao-cli pool create --name redis
-Created new pool: redis
-$ CIAO_CLIENT_CERT_FILE=$CIAO_ADMIN_CLIENT_CERT_FILE ciao-cli pool add --name redis 198.51.100.2
-Added new address to: redis
-$ ciao-cli external-ip map --instance b40f3aab-908f-4377-a6bf-e9b7703a0684 --pool redis
-Requested external IP for: b40f3aab-908f-4377-a6bf-e9b7703a0684
+$ CIAO_CLIENT_CERT_FILE=$CIAO_ADMIN_CLIENT_CERT_FILE ciao create pool redis
+$ CIAO_CLIENT_CERT_FILE=$CIAO_ADMIN_CLIENT_CERT_FILE ciao add external-ip redis 198.51.100.2
+$ ciao attach external-ip redis b40f3aab-908f-4377-a6bf-e9b7703a0684
 ```
 Don't forget to replace the instance id, b40f3aab-908f-4377-a6bf-e9b7703a0684, with the
 ID of the container instance in your cluster.
@@ -313,7 +291,7 @@ of the instances' private network, e.g., from the terminal of our SingleVM.
 We can see the mapping we've just established as follows.
 
 ```shell
-$ ciao-cli external-ip list
+$ ciao list external-ips
 # ExternalIP   InternalIP InstanceID
 1 198.51.100.2 172.16.0.4 b40f3aab-908f-4377-a6bf-e9b7703a0684
 ```
