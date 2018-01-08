@@ -423,3 +423,88 @@ various network constructs such as subnets and interfaces are assigned names
 from different namespaces by both the Cloud Integrated Advanced Orchestrator
 and docker.  The ciao network driver maintains a database so that it can
 translate identifiers from one namespace to another.
+
+## Storage
+
+The Cloud Integrated Advanced Orchestrater supports two forms of storage for instances:
+
+1. local storage, in which an instance's data, including its rootfs, is stored
+on the disk of the node upon which the instance is hosted
+2. ceph based storage, in which an instance's data is stored in the
+ceph cluster.
+
+{% include important.html content="Local storage is only available for
+containers." %} Both the rootfs and any disk based data written or read by a VM
+instance must be stored in a ceph volume.  This is in contrast to containers,
+whose root file systems are always stored on the node on which the container is hosted.
+Processes running within these containers can write to the containers' root file
+systems.  Although, disk based IO will be very fast in containers that
+read and write to their rootfs, there is a downside.  Any data written to a
+local volume does not survive migration.  The rootfs of a container is reset to
+its default state when it is migrated from one node to another.  It is however
+possible to create a data volume inside the ceph cluster and attach this volume
+to a container.  Any data written to this volume by the container will survive
+migration.
+
+### Images
+
+The controller implements an image service.  This service manages a set of
+RBD (Rados Block Device) volumes that serve as backing images for the root file
+systems of newly created VM instances.  The image service allows users to
+create, delete, inspect and enumerate images.  Normal users can create tenant
+private images, i.e., images that are associated with a given tenant and can
+only be used to create root file systems for instances belonging to the same
+tenant.  Administrators can create public images, that that can be used by all
+users to create VM instances in any tenants they like.
+
+When a new image is uploaded to the image service it is converted into a raw
+format and stored in a new RBD volume in the ceph cluster.  An RBD snapshot is
+then taken of this new volume and the snapshot is protected.  It is this
+protected RBD snapshot that is used as the backing image for VM instances.  Users
+must specify a name when they create an image.  The controller will also assign
+the newly created image an UUID.  The image can be referred to by either its name
+or UUID.
+
+In order to create an instance that uses an image in the image service as the
+backing image for its rootfs, the backing image can be referenced in the
+workload definition used to create the instance.  When the controller creates
+the new VM, it first creates its rootfs, by making a copy-on-write clone of the
+protected snapshot that represents the backing image.  This results in a new
+CIAO volume.  Volumes are discussed further in the following section.
+
+### Volumes
+
+The controller implements a volume service that manages a set of volumes.
+Volumes are used for two purposes:
+
+1. They serve as the root file systems of VM instances.
+2. They can be used by both VM and container instances to store data.
+
+The volume service allows volumes to be created, enumerated, inspected,
+attached and detached from existing instances.  A volume can only be
+attached to one instance at any one time.
+
+Volumes can be attached to both container and VM instances at creation time, via
+a workload definition. Typically, only newly created volumes, i.e., volumes
+created by controller when creating the instance, are attached to instances in
+this way.  It is possible to attach existing volumes to a new instance via its
+workload definition, but doing so will essentially place a restriction of one
+on the number of instances that can be created from that workload definition, as a
+volume can only be attached to one instance at any one time.
+
+Volumes created by a workload definition can be marked as ephemeral.  Ephemeral
+volumes are automatically deleted when the instance to which they are attached
+is itself deleted. Volumes automatically created to serve as the root file
+systems for instances are marked as ephemeral by default.  Non-ephemeral
+volumes, on the other hand, are not deleted along with the instances they were
+original created with.  They allow data to survive the deletion of the
+instances that created it and must be manually deleted when no longer required.
+
+Volumes can also be attached to existing instances, albeit with some
+restrictions.  Volumes can only be attached to exited containers. They cannot be
+attached to running containers.  Volumes can be attached to running VM
+instances.  However, they can only be detached from exited instances,
+irrespective of whether the instances are VMs or containers.  A volume that is
+attached to an instance, either as a data volume or because it serves as the
+instance's rootfs, is said to be in use.  In use volumes cannot be deleted.
+
