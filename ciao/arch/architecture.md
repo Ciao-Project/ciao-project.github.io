@@ -341,6 +341,64 @@ compute nodes.  Therefore, they communicate with each other via the CNCI.  The
 instance from tenant 2, 172.16.1.2, is on its own private network and cannot
 communicate with or be seen by the other two instances.
 
+### Multiple subnets
+
+A single tenant containing instances whose IP addresses are allocated from
+multiple subnets will be served by multiple CNCIs, one per subnet.  To ensure
+that instances from different subnets can communicate with each other,
+special handling is needed to connect CNCIs belonging to the same tenant to each other.
+
+The cnci-agent running inside each CNCI is informed by controller about the
+other CNCIs that belong to the same tenant.  Each time controller adds or
+deletes a subnet ( and a CNCI ) it sends an SSNTP message to each cnci-agent in
+the tenant providing the latest information about the tenant's subnet
+configuration.  The cnci-agents use this information to maintain a network of
+multi-point GRE tunnels, that connect the CNCIs in the same tenant to each other.
+When an instance needs to talk to another instance in the same tenant but a
+different subnet, its packets flow from its compute node to its CNCI.  They are
+then re-routed by this CNCI through a GRE tunnel connected to the CNCI that
+manages the subnet of the target instance.  This CNCI routes the packets through
+the GRE tunnel that leads to the compute node on which the target instance runs.
+Note that this may actually be the same compute node as the first instance.
+Communication between two subnets always flows through a CNCI, or rather two
+CNCIs, even if these communicating instances are resident on the same physical
+compute node.
+
+When a cnci-agent receives information about neighbouring CNCIs it performs
+a number of actions:
+
+1. It creates a multi-point GRE tunnel, if it does not already exist, and assigns
+this tunnel an IP address.  By default, this IP address is chosen from
+the subnet 192.168.128.0/17, but this is configurable.
+2. It adds routing rules so traffic destined for the tenant private addresses of
+instances belonging to other subnets are routed through this tunnel and directed
+to the virtual IP address of the tunnel endpoint on the target CNCI.
+3. It updates the ARP cache on the CNCI to map between the real physical IP addresses
+ of the neighbouring CNCIs and the virtual IP addresses assigned to the endpoints
+ of their multi-point GRE tunnels.  In this way the IP addresses of the
+ remote tunnels are resolved to the IP addresses of the CNCIs on which they
+ are hosted.
+
+It is important to note that tenants consisting of multiple subnets contain
+multiple independent L2 networks.  Packets from one L2 network destined for another,
+leave their L2 network in their CNCI and are routed over the L3 network to the
+target L2 network via a CNCI to CNCI tunnel, as we have seen.  This is in contrast
+to tenants consisting of a single subnet in which all inter-instance communication
+typically takes place on the same virtual L2 network.
+
+{% include image.html file="multi-subnet.png" caption="Figure 3: Multi-subnet tenant" %}
+
+Figure 3 illustrates how multiple subnets work in practice.  The cluster
+depicted is similar to the cluster presented in Figure 2.  As in Figure 2 we
+have one network node, two compute nodes, two CNCIs and two different subnets.
+However, in Figure 3, there is only one tenant.  Both subnets belong to this tenant.
+The image depicts how an instance, 172.16.0.4, in one subnet, communicates with another
+instance, 172.16.1.2, in a different subnet.  The communication takes place
+via the CNCI of the first instance, a tunnel connecting this CNCI to the CNCI of
+the second instance and a tunnel connecting the second CNCI to the compute node
+hosting this second instance.
+
+
 ### External traffic
 
 Network nodes are expected to have at least one network interface connected to an
@@ -348,10 +406,10 @@ external network of some kind.  When a new CNCI is launched on a network node a
 macvtap interface is created for it.  This interface is associated with the network
 node's external network interface.  The CNCI instance receives an IP address on the
 external network via DHCP.  All external traffic entering and leaving a subnet flows
-through the CNCI's macvtap network interface.  Figure 3, demonstrates the two different
+through the CNCI's macvtap network interface.  Figure 4, demonstrates the two different
 types of external network access possible.
 
-{% include image.html file="external-networking.png" caption="Figure 3: External networking" %}
+{% include image.html file="external-networking.png" caption="Figure 4: External networking" %}
 
 The figure depicts one network node and one compute node.  The network node
 hosts a single CNCI for the subnet 172.16.0.0/24.  The network interface of the
@@ -507,4 +565,3 @@ instances.  However, they can only be detached from exited instances,
 irrespective of whether the instances are VMs or containers.  A volume that is
 attached to an instance, either as a data volume or because it serves as the
 instance's rootfs, is said to be in use.  In use volumes cannot be deleted.
-
