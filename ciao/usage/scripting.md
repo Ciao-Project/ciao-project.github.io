@@ -85,8 +85,6 @@ struct {
 	SSHIP      string    `json:"ssh_ip"`
 	SSHPort    int       `json:"ssh_port"`
 }
-	SSHPort int                                   // Instance SSH Port
-}
 ```
 
 ## Template Cheat Sheet
