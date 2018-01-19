@@ -84,7 +84,7 @@ The next step is to create a custom VM for running the Cloud Integrated Advanced
 
 
 ```shell
-$ ccloudvm create -mem=6 -cpus=2 ciao
+$ ccloudvm create -mem=6000 -cpus=2 ciao
 ```
 
 This will create a new VM with 6GBs of memory and 2 VCPUs, which is the minimum needed for hosting a k8s cluster inside ccloudvm.
@@ -103,7 +103,7 @@ The ccloudvm create command has a lot of work to do so it can take some time to 
 An edited example ccloudvm output is shown below
 
 ```shell
-$ ccloudvm create -mem=6 -cpus=2 ciao
+$ ccloudvm create -mem=6000 -cpus=2 ciao
 Installing host dependencies
 OS Detected: ubuntu
 Missing packages detected: [xorriso]
@@ -454,6 +454,6 @@ qemu-system-x86_64: -net user,hostfwd=tcp::10022-:22: Device 'user' could not be
 Here we can see that port 10022 is already taken.  Going forward we will modify ccloudvm to dynamically select available host ports.  In the meantime however, we can work around this problem by overriding the default ports on the command line, as follows:
 
 ```shell
-$ ccloudvm create -mem=6 -cpus=2 -port "10023-22" ciao
+$ ccloudvm create -mem=6000 -cpus=2 -port "10023-22" ciao
 ```
 
