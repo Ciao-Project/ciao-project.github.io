@@ -123,8 +123,9 @@ installed on your machine is:
 Once Go is installed you simply need to type
 
 ```
-go get github.com/intel/ccloudvm
-$GOPATH/bin/ccloudvm create ciao
+go get github.com/intel/ccloudvm/...
+$(go env GOPATH)/bin/ccloudvm setup
+$(go env GOPATH)/bin/ccloudvm create ciao
 ```
 
 ccloudvm will install some needed dependencies on your local PC such
