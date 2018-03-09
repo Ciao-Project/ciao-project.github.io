@@ -75,8 +75,11 @@ $ export no_proxy=.my-company.com
 Once Go is installed downloading and installing ccloudvm is easy.  Simply type
 
 ```shell
-$ go get github.com/intel/ccloudvm
+$ go get github.com/intel/ccloudvm/...
+$ ccloudvm setup
 ```
+
+ccloudvm has dependencies on a number of other components, such as qemu.  The first thing it will do when the setup command is executed is to check to see whether these packages are present on your host computer.  If they are not, it will install them, asking you for your password if necessary.
 
 ## Creating a VM in which to run the Cloud Integrated Advanced Orchestrator
 
@@ -88,8 +91,6 @@ $ ccloudvm create --mem=6000 --cpus=2 ciao
 ```
 
 This will create a new VM with 6GBs of memory and 2 VCPUs, which is the minimum needed for hosting a k8s cluster inside ccloudvm.
-
-ccloudvm has dependencies on a number of other components, such as qemu.  The first thing it will do when executed is to check to see whether these packages are present on your host computer.  If they are not, it will install them, asking you for your password if necessary. 
 
 The ccloudvm create command has a lot of work to do so it can take some time to run.  In short, it performs the following tasks.
 
@@ -404,6 +405,12 @@ $ ccloudvm delete
 
 on your host.
 
+To disable ccloudvm entirely, type
+
+```shell
+$ ccloudvm teardown
+```
+
 ## Troubleshooting {#trouble}
 
 The ccloudvm create command can sometimes fail.  The most common causes of this failure are discussed below.
@@ -425,35 +432,5 @@ device.  Assuming that this group is called kvm you would execute
 
 ```shell
 $ sudo gpasswd -a $USER kvm
-```
-
-### Port Conflict
-
- By default, ccloudvm maps a port on your computer's network interface to a port
- on the VM it creates. One of these ports, 10022, is used for SSH access. This
- port mapping is necessary to access these services in the VM from the host. For
- example, the ccloudvm connect command is implementing by executing
-
-```shell
-$ ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -i /home/$USER/.ccloudvm/id_rsa 127.0.0.1 -p 10022
-```
-
-on the host.  There's a potential problem here.  If either of these ports are already taken by some other service on
-your computer, ccloudvm create will fail, e.g.,
-
-```shell
-Installing host dependencies
-OS Detected: ubuntu
-Downloading Ubuntu 16.04
-Booting VM with 6 GB RAM and 2 cpus
-Failed to launch qemu : exit status 1, qemu-system-x86_64: -net user,hostfwd=tcp::10022-:22: could not set up host forwarding rule 'tcp::10022-:22'
-qemu-system-x86_64: -net user,hostfwd=tcp::10022-:22: Device 'user' could not be initialized
-
-```
-
-Here we can see that port 10022 is already taken.  Going forward we will modify ccloudvm to dynamically select available host ports.  In the meantime however, we can work around this problem by overriding the default ports on the command line, as follows:
-
-```shell
-$ ccloudvm create --mem=6000 --cpus=2 -port "10023-22" ciao
 ```
 
